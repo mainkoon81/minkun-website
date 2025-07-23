@@ -1,0 +1,39 @@
+---
+title: "page01"
+about:
+  template: trestles
+  id: hero-heading
+  image: "img/IMG_0800"
+
+
+
+---
+
+
+
+### This content appears above the formatted about page content.
+
+:::{#hero-heading}
+
+Minkun is
+
+## Education
+
+Dublin City University | Dublin, Ireland
+PhD in Computing | April 2020 - Nov 2024
+
+## Experience
+
+Wengo Analytics | Head Data Scientist | April 2018 - present
+
+Fernando Menis Architect| Chief Analyst | Sept 2012 - April 2018
+
+:::
+
+
+
+```{=html}
+<div  style="margin: 30px; text-align: center;">
+<a class="btn btn-primary" href="https://www.marvinschmitt.com/blog/website-tutorial-quarto/" role="button" target="_blank" style="padding: 15px 30px;">View the tutorial for this template (+ download link)</a>
+</div>
+```
