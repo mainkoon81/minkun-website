@@ -1,11 +1,9 @@
-# This file controls the settings for your Quarto template from www.marvinschmitt.com
 
 # website settings
 website:
-  title: "Minkun Kim"                                # Your name
+  title: "Minkun Kim"                               
   description: "Work Work Work"   # A brief slogan (optional)
-  image: "C:/Users/kimmk/Desktop/Daily Task/IMG_0800"
-  
+  image: "img/IMG_0800.jpg"
   favicon: img/favicon.png
   
   # start of the navigation bar at the top of the website
@@ -15,23 +13,25 @@ website:
     
     # your sub-pages
     left:
-      - text: "Projects"
-        href: projects/index.qmd
-      - text: "My whiteboard"
-        href: Mywhiteboard/index.qmd
+      - text: "Research"
+        href: research/index.qmd
+      - text: "Finance+Math Blog"
+        href: whiteboard01/index.qmd
+      - text: "Data-Eng Blog"
+        href: whiteboard02/index.qmd
+      - text: "Energy Blog"
+        href: whiteboard03/index.qmd
+      - text: "Design"
+        href: whiteboard04/index.qmd
       - text: "CV"
         href: cv/index.qmd
     
     # your social media handles
     right:
-      - icon: folder-symlink
-        href: https://github.com/mainkoon81/
-      - icon: linkedin
-        href: https://www.linkedin.com/in/minkun-kim-318403b8/
+      - icon: mortarboard
+        href: https://scholar.google.com/citations?user=TjHqLIAAAAAJ&hl=en
       - icon: envelope
-        aria-label: email
         href: "mailto:kimmk0810@gmail.com"  
-  
   
 
 # Don't touch unless you know what you are doing :) ------------
@@ -40,12 +40,8 @@ website:
     type: textbox
   page-footer: 
     left: |
-      <span class="faux-block">&#169; 2023 Marvin Schmitt CC BY-SA 4.0</span>
-    center: |
-      <span class="faux-block"><a href="https://www.marvinschmitt.com/blog/website-tutorial-quarto/">View the tutorial for this template!</a></span>
-    right: |
-      <span class="faux-block"><a href="https://github.com/marvinschmitt/quarto-website-template/">View source on GitHub</a></span>
-
+      <span class="faux-block">&#169; 2025 Minkun Kim</span>
+    
 
 
 

@@ -1,0 +1,44 @@
+---
+title: Research
+---
+
+### PhD Thesis: Risk Premium Development with Model Risk
+
+<img src="convolution.jpg" style="height: 100%; width: 100%; object-fit: contain" onclick="window.open('https://......', 'blank');"/>
+
+<a href="https://......" target="_blank">DCU DORAS</a> | <a href="https://github.com/mainkoon81/Paper3-Nonparametric-Bayesian-Approach02" target="_blank">Code</a> | <iframe width="560" height="315" src="https://www.youtube.com/embed/R4QScLd_-Dg?si=wdeUVM1ohu5db1eb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></a><br>
+
+Motivated by the case of catastrophic financial losses in the insurance industry, this thesis investigates Bayesian approaches to address diverse model risks in risk premium prediction. Unlike classical actuarial methods that rely solely on data, Bayesian models incorporate parameter knowledge, offering flexibility in handling erroneous data issue. We leverage this advantage to link Bayesian parametric/nonparametric frameworks with state-of-art strategies for managing incomplete data issues, such as Missingness at Random (MAR) and Non-Differential Berkson (NDB) mismeasurement. Additionally, we address other key analytical challenges, including heterogeneity, convolution, and scalability.
+
+----
+
+### Bayesian Nonparametric Log Skew-Normal Mixture with Missing At Random Covariates in Insurance Practice  
+
+<img src="dp story.jpg" style="height: 100%; width: 100%; object-fit: contain" onclick="window.open('https://www.mdpi.com/2225-1146/11/4/24', 'blank');"/>
+
+<a href="https://www.mdpi.com/2225-1146/11/4/24" target="_blank">Econometrics</a> | <a href="https://github.com/mainkoon81/Paper2-Nonparametric-Bayesian-Approach01" target="_blank">Code</a><br>
+
+We propose novel connections among a covariate-dependent Dirichlet process mixture, log-normal convolution, and missing covariate imputation. As a generative approach, our framework models the joint of outcome and covariates, which allows us to impute missing covariates under the assumption of missingness at random.
+
+----
+
+### Parametric Hierarchical Bayes with Non-Differential Berkson Covariates in Insurance Practice
+
+<img src="hier story.jpg" style="height: 80%; width: 80%; object-fit: contain" onclick="window.open('https://www.mdpi.com/2076-3417/15/1/210', 'blank');"/>
+
+<a href="https://www.mdpi.com/2076-3417/15/1/210" target="_blank">Applied Sciences</a> | <a href="https://github.com/mainkoon81/Paper1-Parametric-Bayesian-Approach00" target="_blank">Code</a><br>
+
+We explore connections between Bayesian hierarchical modeling, partial pooling techniques, and the Gustafson correction method for mismeasured covariates. Focusing on Non-Differential Berkson (NDB) mismeasurement, we propose an approach that corrects such errors without relying on gold standard data. We discover the unique prior knowledge regarding the variance of the NDB errors, and utilize it to adjust the biased parameter estimates built upon the NDB covariate.
+
+----
+
+
+### Using Tableau and Google Map API for Understanding the Impact of Walkability on Dublin City
+
+<img src="dublin.jpg" style="height: 100%; width: 100%; object-fit: contain" onclick="window.open('https://arxiv.org/abs/2310.07563', 'blank');"/>
+
+<a href="https://arxiv.org/abs/2310.07563" target="_blank">arXiv Preprint</a> | <a href="https://github.com/mainkoon81/Study-Tableau" target="_blank">Code</a><br>
+
+We utilize the Google Map API and Tableau to visualize the less walkable areas across Dublin city and using WLS regression, we assess the effects of unwalkability on house prices in Dublin, thus quantifying the importance of walkable areas from an economic perspective.
+
+
