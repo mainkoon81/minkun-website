@@ -30,25 +30,30 @@ Please feel free to [contact me](mailto:kimmk0810@gmail.com) if you have any que
 ::::{.grid}
 ::: {.g-col-12 .g-col-sm-6}
 #### Interests
-Quantitative Finance <br>
-Energy Market Risk Management <br>
+Valuation/Risk Modeling <br>
+Energy Derivative Pricing <br>
+Stochastic Modeling <br>
 Nonparametric Bayesian Computing <br>
-Data-Driven Urban Design
+Data Engineering <br>
+Data-Driven Architectural Urbanism <br>
 :::
 ::: {.g-col-12 .g-col-sm-6}
 #### Education
 ::: {.smaller}
-PhD in Computing<br>
+Ph.D in Computing <br>
 <small>Dublin City University, Ireland </small>
 
-MSc in Financial Mathematics<br>
-<small>University of ..., ...</small>
+M.Sc in Financial Mathematics <br>
+<small>University of York, UK </small>
 
-H.Dip in Energy Economics<br>
-<small>University of Aberdeen, UK</small>
+M.Sc in Sustainable Energy System <br>
+<small>Ruhr University Bochum, Germany </small>
 
-BSc in Urban Engineering<br>
-<small>Hongik University, South Korea</small>
+M.Sc in Data Analytics <br>
+<small>Dublin City University, Ireland </small>
+
+B.Sc in Urban Engineering <br>
+<small>Hongik University, South Korea </small>
 :::
 :::
 ::::
