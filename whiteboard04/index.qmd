@@ -19,6 +19,6 @@ As a wizard and scholar of Middle-earth, I have been studying the magic of the n
 
 ```{=html}
 <div  style="margin: 30px; text-align: center;">
-<a class="btn btn-primary" href="https://www.marvinschmitt.com/blog/website-tutorial-quarto/" role="button" target="_blank" style="padding: 15px 30px;">View the tutorial for this template (+ download link)</a>
+<a class="btn btn-primary" href="https://github.com/mainkoon81/U111-project-Sample-Artistic-Visualization" role="button" target="_blank" style="padding: 15px 30px;">View my artwork (+ download link)</a>
 </div>
 ```

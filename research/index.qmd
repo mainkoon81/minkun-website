@@ -1,5 +1,6 @@
 ---
-title: Research
+title: "My Research Work"
+title-block-banner: true
 ---
 
 ### PhD Thesis: Risk Premium Development with Model Risk

@@ -1,24 +1,18 @@
 ---
-title: "Photography"
+title: "Data Engineering"
+listing:
+  contents: POST
+  sort: "date desc"
+  type: default
+  categories: true
+  sort-ui: false
+  filter-ui: false
+page-layout: full
+title-block-banner: true
 ---
 
-As a wizard and scholar of Middle-earth, I have been studying the magic of the natural world for centuries. Through my self-portraits, I aim to capture the essence of my own being and reflect on my own journey through time. Each photograph is a reflection of my own experiences and emotions. Through my photography, I hope to offer a glimpse into my life as a scholar and adventurer, and inspire others to reflect on their own journeys through the world.
-
-::: {layout-ncol=2}
-
-![](gandalf_image_1.jpg)
-
-![](gandalf_image_2.jpg)
-
-![](gandalf_image_3.jpg)
-
-![](gandalf_image_4.jpg)
-
-:::
+In energy finance, being a quant isn’t just about building models — it’s about making sure those models are fed with clean, timely, and scalable data. Our models are only as good as the data that drives them. Model accuracy depends on data quality, not just mathematical skill! We are dealing with massive amounts of real-time and historical data — electricity load curves, weather forecasts, fuel prices, grid constraints, power plant outages, carbon credit prices, etc. Without a well-designed ETL process or pipeline, this data is messy, delayed, or incomplete, making any model unreliable. That’s where data engineering skills come in.
 
 
-```{=html}
-<div  style="margin: 30px; text-align: center;">
-<a class="btn btn-primary" href="https://www.marvinschmitt.com/blog/website-tutorial-quarto/" role="button" target="_blank" style="padding: 15px 30px;">View the tutorial for this template (+ download link)</a>
-</div>
-```
+
+
