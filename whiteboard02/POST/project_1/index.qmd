@@ -8,10 +8,11 @@ execute:
   warning: true
   message: true
 jupyter: python3
+category: "data storage"
 author: "Minkun Kim"
 date: "2025-10-28"
 categories:
-  - AWS
+  - data storage
 comments:
   utterances:
     repo: "mainkoon81.github.io/minkun-website"

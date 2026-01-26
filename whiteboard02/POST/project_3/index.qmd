@@ -1,0 +1,160 @@
+---
+title: "Quality Monitoring for Casting RUL Analysis"
+format: html
+execute:
+  echo: true
+  warning: true
+  message: true
+jupyter: python3
+category: "data Quality Monitoring"
+author: "Minkun Kim"
+date: "10.28.2025"
+categories:
+  - data quality monitoring
+comments:
+  utterances:
+    repo: "mainkoon81.github.io/minkun-website/"
+---
+
+During continuous casting machine (CCM) operation, the main production issue that comes up during the operation of sleeves is that defects appear on the surface of the copper pipe of the sleeve and distort the profile of its inner cavity. 
+
+The automated process control system records casting parameters into a production database. The collected data represent averaged process parameters across all strands within each cast, with the primary strand-level variation captured through mould sleeve resistance.
+
+Following mould sleeve removal and inspection, process parameters, ingot geometry, and related operational attribute data are extracted from the SCADA system. Although sourced from a real production environment, the data were subsequently cleaned, aggregated, and pre-processed to support Remaining Useful Life (RUL) modeling.
+
+The RUL variable in the dataset is derived from the ``resistance (tonn)`` (sleeve failure) variable by computing for each sleeve, "crystallizer", "casting stream", the difference between the highest observed resistance value and the current resistance value.
+
+The expected Useful Life in tons should be as follows:
+
+- 17,000 tons for 180x180,
+- 13,000 tons for 150x150.
+
+
+We might want to predict the remaining time the sleeve can operate before failing, using sensor data and historical patterns to enable predictive maintenance. 
+
+- Purpose: To estimate the time (or usage cycles, distance) until a component or system needs repair or replacement, shifting from reactive to proactive maintenance.
+
+- Data Inputs: Relies on sensor data (vibration, temperature, pressure, etc.) and operational history from IoT devices, analyzed to spot degradation trends.
+
+- Statistical survival modeling
+  -  The characteristics of the survival function can be calculated as 1 — cdf. Comparing current condition to historical failure data.
+
+- Degradation modeling (linear/exponential)
+  - 1. Linear degradation: the prediction is presented as a straight line while historical data determine its slope; it is usually applied if the system does not accumulate damage (degradation).
+  - 2. Exponential degradation: the prediction is presented as an exponent; it is usually applied if the system can accumulate damage cumulatively.
+
+- Similarity-based comparisons
+  - 1. Direct comparison of time series using proximity metrics such as Dynamic Time Warping (DTW) or proximity-based clustering / classification methods.
+  - 2. Selection of features from a time series and further comparison of the obtained feature vectors (i.e., proximity metrics, clustering).
+
+
+- Output: A statistical prediction of RUL, often with a confidence interval, showing how much life is left.
+
+- Benefits: Reduces unscheduled downtime, optimizes maintenance planning, extends asset life, and fills knowledge gaps left by retiring experts. 
+
+
+
+The dataset uses:
+
+ - ``Resistance (tonn)``: A proxy for total life consumed, i.e., how many tons of steel were cast before failure.
+
+ - ``RUL``: Calculated as:
+
+$$
+RUL = \mathbb{max}( resistance ) - current \; resistance
+$$
+So it is a declining time-to-failure indicator which is a standard in supervised RUL estimation datasets. Time-aligned degradation data (like resistance over time) is used to estimate RUL via survival models.
+
+
+The project's goal is to ensure the quality of data collected during the operation of the Continuous Casting Machine (CCM). That data includes sleeve resistance, strand identifiers, and up to 15 process parameters.
+
+Here, I'm laying the foundation: collecting reliable, validated, complete, fresh, and interpretable data that can power technical diagnostics and predictive maintenance.
+
+I designed and implemented a scalable data warehouse on BigQuery using a tiered Bronze–Silver–Gold structure inspired by Medallion Architecture. Data ingestion was handled through Kafka, while transformations and modeling were managed with dbt to ensure modular, version-controlled pipelines. 
+
+For orchestration, I used Airflow, enabling automated execution, validation, and alerting to maintain high pipeline reliability. This layered approach allowed us to clearly separate raw, cleaned, and analytics-ready data, improving data governance, transparency, and access control across the system. 
+
+As a result, our BI dashboards will be consistently refreshed with accurate, high-quality data, supporting timely and reliable decision-making. The system also introduced robust monitoring and clear data lineage, with ongoing efforts focused on reducing latency and further optimizing observability.
+
+## Product Requirements Document (PRD)
+
+- [A]. Overview 
+  - i) background
+  - ii) objective
+
+
+| ID  | Feature                      | Test Type       | Description                                          |
+| --- | ---------------------------- | --------------- | ---------------------------------------------------- |
+| T01 | `RUL` accuracy               | Regression test | Compare model output vs. true RUL on historical data |
+| T02 | Feature completeness         | Not Null        | Ensure no nulls in casting parameter inputs          |
+| T03 | Resistance validity          | Range check     | Ensure resistance is within known tonnage range      |
+| T04 | Alert precision              | SLA test        | Alert only when RUL < threshold with high accuracy   |
+| T05 | Casting temperature validity | Value domain    | Validate `steel_temperature` is within 1400–1600°C   |
+
+
+
+
+
+
+
+
+
+
+
+## Data Acquisition 
+In the course of CCM operation, the automatic control system that runs the process of casting ingots creates a database of casting parameters. The collected parameters are averaged data for all the strands in each cast; the only thing that differs is the resistance of the sleeve for each strand. After removing the mould sleeve for inspection, the initial data on the process parameters of casting, the geometry of obtained ingots and other attributes can be uploaded from the SCADA. The data were collected from a real production facility but after that they were processed, cleared, aggregated and prepared to solve the RUL problem.
+
+
+
+
+
+
+
+
+
+
+## Data Management with Medallion Architecture 
+The following dataset represents a Silver-layer operational view within a ***medallion architecture*** - Bronze, Silver, Gold - for a continuous casting process investigation. Raw sensor streams and process logs are first ingested into the *Bronze layer* as immutable records. These raw signals are then cleaned, standardized, time-aligned, and enriched with production metadata, cooling parameters, chemical composition, and equipment identifiers to form this *Silver dataset*.
+
+Each row corresponds to a casting event or production segment, and the Remaining Useful Life (RUL) variable serves as the analytical target. By structuring the data at the *Silver layer*, we enable reliable linkage between production characteristics: ``production info``, process parameters: ``casting process parameters``, cooling & crystallizer behavior: ``Water Consumption``, ``residue info``, chemical composition of steel: ``material properties``, ``chemical composition``, operational identifiers: ``time identification``, ``equipment context``, and target variable: ``RUL``, which can then be aggregated or modeled in the Gold layer to produce RUL predictions and maintenance KPIs. **This layered design ensures data quality and auditability** while supporting predictive maintenance analytics.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+## Bibliography
+\[1\] I. Kobyzev, S. J. D. Prince and M. A. Brubaker, "Normalizing
+Flows: An Introduction and Review of Current Methods," in IEEE
+Transactions on Pattern Analysis and Machine Intelligence, vol. 43, no.
+11, pp. 3964-3979.
+
+\[2\] Durkan, C., Bekasov, A., Murray, I., & Papamakarios, G. (2019).
+Neural Spline Flows. Advances in Neural Information Processing Systems,
+abs/1906.04032.
+https://proceedings.neurips.cc/paper/2019/hash/7ac71d433f282034e088473244df8c02-Abstract.html
+
+\[3\] Radev, S. T., Mertens, U. K., Voss, A., Ardizzone, L., & Kothe, U.
+(2022). BayesFlow: Learning Complex Stochastic Models With Invertible
+Neural Networks. IEEE Transactions on Neural Networks and Learning
+Systems, 33(4), 1452–1466.
+
+-->

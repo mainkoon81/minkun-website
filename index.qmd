@@ -22,7 +22,7 @@ format:
 ::: {#about-block}
 # Welcome to my website!
 
-I am a scholar dedicated to understanding the complexities of our stochastic world. This website offers a window into my research, publications, and selected findings accumulated over years of academic and applied work. My research interests lie at the intersection of Bayesian computing, quantitative finance, data engineering, and energy markets. I also have a personal interest in data-driven urban planning. Here, you’ll find a selection of my published work, along with recent insights and ongoing developments from my current studies.
+I am a scholar dedicated to understanding the complexities of our stochastic world. This website offers a window into my research and selected findings accumulated over years of my academic and applied work. My research interests lie at the intersection of Bayesian computing, quantitative finance, data engineering, and energy markets. I also have a personal interest in data-driven urban transformation. Here, you'll find a selection of my work, along with recent insights and ongoing developments from my current studies.
 
 Please feel free to [contact me](mailto:kimmk0810@gmail.com) if you have any questions or would like to discuss potential projects.
 
@@ -31,28 +31,27 @@ Please feel free to [contact me](mailto:kimmk0810@gmail.com) if you have any que
 ::: {.g-col-12 .g-col-sm-6}
 #### Interests
 Valuation/Risk Modeling <br>
-Energy Derivative Pricing <br>
 Stochastic Modeling <br>
 Nonparametric Bayesian Computing <br>
 Data Engineering <br>
-Data-Driven Architectural Urbanism <br>
+Data-Driven Design <br>
 :::
 ::: {.g-col-12 .g-col-sm-6}
 #### Education
 ::: {.smaller}
-Ph.D in Computing <br>
+Ph.D Computing <br>
 <small>Dublin City University, Ireland </small>
 
-M.Sc in Financial Mathematics <br>
+M.Sc Financial Mathematics <br>
 <small>University of York, UK </small>
 
-M.Sc in Sustainable Energy Finance <br>
+M.Sc Sustainable Energy System <br>
 <small>Ruhr University Bochum, Germany </small>
 
-M.Sc in Data Analytics <br>
+M.Sc Data Analytics <br>
 <small>Dublin City University, Ireland </small>
 
-B.Sc in Urban Engineering <br>
+B.Sc Urban Engineering <br>
 <small>Hongik University, South Korea </small>
 :::
 :::

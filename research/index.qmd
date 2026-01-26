@@ -5,9 +5,9 @@ title-block-banner: true
 
 ### PhD Thesis: Risk Premium Development with Model Risk
 
-<img src="convolution.jpg" style="height: 100%; width: 100%; object-fit: contain" onclick="window.open('https://......', 'blank');"/>
+<img src="convolution.jpg" style="height: 100%; width: 100%; object-fit: contain" onclick="window.open('https://doras.dcu.ie/30936/', 'blank');"/>
 
-<a href="https://......" target="_blank">DCU DORAS</a> | <a href="https://github.com/mainkoon81/Paper3-Nonparametric-Bayesian-Approach02" target="_blank">Code</a> | <iframe width="560" height="315" src="https://www.youtube.com/embed/R4QScLd_-Dg?si=wdeUVM1ohu5db1eb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></a><br>
+<a href="https://doras.dcu.ie/30936/" target="_blank">DCU DORAS</a> | <a href="https://github.com/mainkoon81/Paper3-Nonparametric-Bayesian-Approach02" target="_blank">Code</a> | <iframe width="560" height="315" src="https://www.youtube.com/embed/R4QScLd_-Dg?si=wdeUVM1ohu5db1eb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></a><br>
 
 Motivated by the case of catastrophic financial losses in the insurance industry, this thesis investigates Bayesian approaches to address diverse model risks in risk premium prediction. Unlike classical actuarial methods that rely solely on data, Bayesian models incorporate parameter knowledge, offering flexibility in handling erroneous data issue. We leverage this advantage to link Bayesian parametric/nonparametric frameworks with state-of-art strategies for managing incomplete data issues, such as Missingness at Random (MAR) and Non-Differential Berkson (NDB) mismeasurement. Additionally, we address other key analytical challenges, including heterogeneity, convolution, and scalability.
 
