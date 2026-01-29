@@ -18,7 +18,20 @@ comments:
     repo: "mainkoon81.github.io/minkun-website"
 ---
 
-![what counts as an environmentally sustainable economic activity?](images/6objectives.png){width="1000"}
+![ONLY ``Enviropnmental objectives"..EU-Taxonomy does not address S or G objectives. what counts as an environmentally sustainable economic activity? WHat is your % of business (economic activities) that is really GREEN?](images/6objectives.png){width="1000"}
+
+EU-Taxonomy is developed to create a common language on what Green activity is...to reduce ``green washing" and improve comparability. Using EU-Taxonomy, a firm can determine what economic activities are ENVORONMENTALLY (not Social or Governance-wise) sustainable under the conditions:
+- Technical Screening Criteria (to see significance)
+- DNSH (not to significantly harm others)
+- Meeting Minimum Social Safeguards (to respect human right) 
+
+
+![](images/taxonomy step.png){width="1000"}
+
+
+To meet the E-objectives - Climate, Water, Pollution, Biodiversity, Circular Econ -, a firm discloses `what % of their business` that is  <span style="color: green;">Green</span>...in terms of Revenue (what a firm does now), CAPEX (what a firm does for future), OPEX (how a firm supports its operation).  
+
+
 
 # Case Study - EU Taxonomy Analysis
 

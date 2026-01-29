@@ -20,19 +20,19 @@ comments:
 
 ![Be transparent: How much GREEN are you?](images/Smokestacks.jpeg){width="1000"}
 
-ESRS (EU Sustainability Reporting Standards) provides mandatory reporting standards under the **CSRD** (Corporate Sustainability Reporting Directive) in the EU. ESRS define how companies must report on sustainability-related impacts, risks, and opportunities. They include two cross-cutting standards (ESRS 1 and ESRS 2) that explain the general principles, reporting structure, and required company-wide disclosures. The **environmental standards** `(E1–E5)` cover climate change, pollution, water and marine resources, biodiversity, and resource use and circular economy. The **social standards** `(S1–S4)` focus on a company’s own workforce, workers in the value chain, affected communities, and consumers. Finally, the **governance standards** `(G1)` addresses ethical business conduct, including corruption, lobbying, and transparency.
+ESRS (EU Sustainability Reporting Standards) developed by EFRAG (EU Financial Reporting Advisory Group) provides mandatory reporting standards under the **CSRD** (Corporate Sustainability Reporting Directive) in the EU. ESRS define how companies must report on sustainability-related impacts, risks, and opportunities. They include two cross-cutting standards (ESRS 1 and ESRS 2) that explain the general principles, reporting structure, and required company-wide disclosures. The **environmental standards** `(E1–E5)` cover climate change, pollution, water and marine resources, biodiversity, and resource use and circular economy. The **social standards** `(S1–S4)` focus on a company’s own workforce, workers in the value chain, affected communities, and consumers. Finally, the **governance standards** `(G1)` addresses ethical business conduct, including corruption, lobbying, and transparency. ESRS operationalises `DMA` to assess both inward financial risk and outward environmental effect.  
 
 | Pillar        | Code   | Topic                             |
 |:--------------|:-------|:----------------------------------|
 | Cross-cutting | ESRS 1 | General requirements              |
 | Cross-cutting | ESRS 2 | General disclosures               |
 | Environment   | E1     | Climate change                    |
-| Environment   | E2     | Pollution                         |
-| Environment   | E3     | Water and marine resources        |
-| Environment   | E4     | Biodiversity and ecosystems       |
+| Environment   | E2     | Pollution prevention              |
+| Environment   | E3     | Sustainable use of Water resources|
+| Environment   | E4     | Biodiversity protection           |
 | Environment   | E5     | Resource use and circular economy |
 | Social        | S1     | Own workforce                     |
-| Social        | S2     | Workers in the value chain        |
+| Social        | S2     | Workforce in the value chain      |
 | Social        | S3     | Affected communities              |
 | Social        | S4     | Consumers and end-users           |
 | Governance    | G1     | Business conduct                  |
