@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Minkun Kim">
+<meta name="dcterms.date" content="2025-10-28">
+
+<title>EU-Taxonomy Analysis – Minkun Kim</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../img/favicon.png" rel="icon" type="image/png">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-767004ad43b95a16b07fe46d8bb693ec.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../img/logo.png" alt="" class="navbar-logo light-content">
+    <img src="../../../img/logo.png" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">Minkun Kim</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../research/index.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../whiteboard01/index.html"> 
+<span class="menu-text">Financial Math</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../whiteboard02/index.html"> 
+<span class="menu-text">Data Eng</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../whiteboard03/index.html"> 
+<span class="menu-text">Sustainability</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../cv/index.html"> 
+<span class="menu-text">CV</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://scholar.google.com/citations?user=TjHqLIAAAAAJ&amp;hl=en"> <i class="bi bi-mortarboard" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:kimmk0810@gmail.com"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">EU-Taxonomy Analysis</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">ESRS</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Minkun Kim </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 28, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/6objectives.png" class="img-fluid figure-img" width="1000"></p>
+<figcaption class="margin-caption">ONLY ``Environmental objectives”..EU-Taxonomy does not address S or G objectives. It cares about what counts as an environmentally sustainable economic activity? A firm needs to answer what is its % of business (economic activities) that is really GREEN.</figcaption>
+</figure>
+</div>
+<p>EU-Taxonomy is developed to create a common language on what Green activity is…to reduce ``green washing” and improve comparability. Using EU-Taxonomy, a firm can determine what economic activities are ENVORONMENTALLY (not Social or Governance-wise) sustainable under the conditions:</p>
+<ul>
+<li>Technical Screening Criteria (to see significance)</li>
+<li>DNSH (not to significantly harm others)</li>
+<li>Meeting Minimum Social Safeguards (to respect human right)</li>
+</ul>
+<p><img src="images/taxonomy step.png" class="img-fluid" width="1000"></p>
+<p>To meet the E-objectives - Climate, Water, Pollution, Biodiversity, Circular Econ -, a firm discloses <code>what % of their business</code> that is <span style="color: green;">Green</span>…in terms of the 3 KPIs - Revenue (what a firm does now), CAPEX (what a firm does for future), OPEX (how a firm supports its operation).</p>
+<section id="case-study---eu-taxonomy-analysis" class="level1 page-columns page-full">
+<h1>Case Study - EU Taxonomy Analysis</h1>
+<p>The construction company <em>Gensler AG</em> is preparing its nonfinancial report in accordance with the <strong>EU Taxonomy regulation 2020/852</strong> (EU) for its most recent financial year. To prepare for the EU Taxonomy reporting process, the firm analyzes its <strong>activities</strong> according to its existing operating segments. The geographic segments reflect the operating focus of the business as well as its presence in key international regions and markets.</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/act.png" class="img-fluid figure-img" width="1000"></p>
+<figcaption class="margin-caption">EU Taxonomy Regulation is accompanied by several Delegated Acts as well as additional guidance.</figcaption>
+</figure>
+</div>
+<section id="a.-if-being-mentioned-taxonomy-eligibility" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="a.-if-being-mentioned-taxonomy-eligibility">[A]. If being mentioned: taxonomy-eligibility</h2>
+<p>According to the <strong>Disclosures Delegated Act</strong> (EU) 2021, a <code>taxonomy-eligible</code> economic activity refers to an economic activity that is described in the <strong>Delegated Acts</strong> where <span style="color: red;"><strong>technical screening criteria</strong></span> are defined for each environmental goal (Art.1 <strong>par.5</strong> Disclosures Delegated Act). All remaining economic activities, that are not described in the Delegated Act, are <code>taxonomy non-eligible</code> (Art.1 <strong>par.6</strong> Disclosures Delegated Act).</p>
+<p>For <em>Gensler AG</em>, we are preparing their EU Taxonomy disclosure with regard to <code>taxonomy-eligibility</code>. The activities are listed in Table 1. We consider if these economic activities are described in the <code>Climate</code> <strong>Delegated Act</strong> (Comm. Del. Regulation (EU) 2021/2139).</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/table01.png" class="img-fluid figure-img" width="500"></p>
+<figcaption class="margin-caption">Table 1. Gensler AG segments and activities</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>activity 1</strong> Construction of new building ⇒ <code>{taxonomy-eligible}</code>: <strong>described</strong> as activity 7.1 of the Climate Delegated Act</p>
+<p><strong>activity 2</strong> Renovation of existing building ⇒ <code>{taxonomy-eligible}</code>: <strong>described</strong> as activity 7.2 of the Climate Delegated Act</p>
+<p><strong>activity 3</strong> House keeping contracts ⇒ <code>{taxonomy-non-eligible}</code>: <strong>not described</strong> in any delegated act (yet)</p>
+<p><strong>activity 4</strong> Retail sales of construction materials ⇒ <code>{taxonomy-non-eligible}</code>: <strong>not described</strong> in any delegated act (yet)</p>
+<p><strong>activity 5</strong> General management ⇒ <code>{taxonomy-non-eligible}</code>: <strong>not described</strong> in any delegated act (yet)</p>
+</div>
+</div>
+</section>
+<section id="b.-if-meeting-criteria-taxonomy-alignment" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="b.-if-meeting-criteria-taxonomy-alignment">[B]. If meeting criteria: taxonomy-alignment</h2>
+<p>According to the <strong>Disclosures Delegated Act</strong> (EU) 2021/2178, a <code>taxonomy-aligned</code> economic activity refers to an economic activity that complies with the requirements laid down in <strong>Art.3 of Commission Delegated Regulation</strong> (EU) 2020/852 for each environmental goal (Art.1 <strong>par.2</strong> Disclosures Delegated Act).</p>
+<ul>
+<li><strong>Art.3 of Regulation</strong> (EU) 2020/852: An economic activity shall qualify as environmentally sustainable where that <strong>your economic activity</strong>….
+<ul>
+<li><ol type="i">
+<li><strong>contributes</strong> substantially to one or more of the six environmental objectives.</li>
+</ol></li>
+<li><ol start="2" type="i">
+<li><strong>does not significantly harm</strong> any of the environmental objectives (DNSH).</li>
+</ol></li>
+<li><ol start="3" type="i">
+<li>is carried out in compliance with the <strong>minimum social safeguards</strong> (basic human rights, labor, and anti-corruption standards based on OECD, UN, and ILO principles).</li>
+</ol></li>
+<li>Complies with the <span style="color: red;"><strong>technical screening criteria</strong></span> set out in Delegated Acts for the respective environmental objective.</li>
+</ul></li>
+</ul>
+<p><em>Gensler AG</em> is preparing their EU Taxonomy disclosure with regard to <code>taxonomy-alignment</code>. In Table 2, activities are listed. Considering the economic activities described in the <code>Climate</code> <strong>Delegated Act</strong> (Comm. Del. Regulation (EU) 2021/2139), let’s see if they are <code>taxonomy-aligned</code>, and meet the climate-change mitigation goal</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/taxonomy01.png" class="img-fluid figure-img" width="500"></p>
+<figcaption class="margin-caption">Table 2. Gensler AG activity description</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>activity 1</strong> Construction of new building ⇒ <code>{taxonomy-aligned}</code>:</p>
+<p><strong>activity 2</strong> Renovation of existing building ⇒ <code>{taxonomy-not-aligned}</code>:</p>
+<p><strong>activity 3</strong> House keeping contracts ⇒ <code>{NA}</code>:</p>
+<p><strong>activity 4</strong> Retail sales of construction materials ⇒ <code>{NA}</code>:</p>
+<p><strong>activity 5</strong> General management ⇒ <code>{NA}</code>:</p>
+</div>
+</div>
+</section>
+<section id="c.-calculating-the-taxonomy-eligiblealigned-quotas" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="c.-calculating-the-taxonomy-eligiblealigned-quotas">[C]. Calculating the taxonomy-eligible/aligned quotas</h2>
+<p>To comply with the EU Taxonomy, <em>Gensler AG</em> must report the <strong>taxonomy quotas</strong> for the current reporting year. Officially, the reporting output shall be presented as suggested by the regulation (Table 3). However, <em>Gensler AG</em> is first preparing a rough draft for filling in this table. Let’s assume that <strong>activity 1.</strong> (Construction of new building) and <strong>activity 2.</strong> (Renovation of existing building) are covered by the description in the <strong>Disclosures Delegated Act</strong> towards the environmental objective of climate change mitigation.</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/taxxx.png" class="img-fluid figure-img" width="1000"></p>
+<figcaption class="margin-caption">Table 3. Example of turnover table</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/t4.png" class="img-fluid figure-img" width="500"></p>
+<figcaption class="margin-caption">Table 4. Total turnover, capital expenditures, operating expenses</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/t5.png" class="img-fluid figure-img" width="500"></p>
+<figcaption class="margin-caption">Table 5. Additional information on taxonomy-alignment of activities</figcaption>
+</figure>
+</div>
+<p><span class="math display">\[
+\begin{aligned}
+\text{Taxonomy-Eligible Quota} &amp;= \frac{\text{Taxonomy-Eligible total}}{\text{Total for segments (Revenue/CAPEX/OPEX) }}\\
+\text{Taxonomy-Aligned Quota} &amp;= \frac{\text{Taxonomy-Aligned total}}{\text{Total for segments (Revenue/CAPEX/OPEX) }}
+\end{aligned}
+\]</span></p>
+<ul>
+<li>[i]. Let’s calculate the <strong>taxonomy quotas</strong> for <code>taxonomy-eligible</code> activities (eligible turnover, CapEx, OpEx) per <span style="color: red;">activity</span> using the information in Table 4. <img src="images/a.png" class="img-fluid" width="1000"></li>
+<li>[ii]. Let’s calculate the <strong>taxonomy quotas</strong> for <code>taxonomy-eligible</code> activities (eligible turnover, CapEx, OpEx) for the <span style="color: red;">whole firm</span> using the information in Table 4.</li>
+</ul>
+<p><span class="math display">\[
+\begin{aligned}
+SUM_{activities} &amp;= 0.2818 + 0.2364 +.. \text{for Revenue} \\
+SUM_{activities} &amp;= 0.155 + 0.35 +.. \text{for CAPEX} \\
+SUM_{activities} &amp;= 0.1316 + 0.3184 +.. \text{for OPEX}
+\end{aligned}
+\]</span></p>
+<ul>
+<li><p>[iii]. Let’s calculate the <strong>taxonomy quotas</strong> for <code>taxonomy-aligned</code> per <span style="color: red;">activity</span> using the information in Table 4 and 5, assuming that the CEO wishes to report quotas that are as high as possible. <img src="images/b.png" class="img-fluid" width="1000"></p></li>
+<li><p>[iv]. Let’s calculate the <strong>taxonomy quotas</strong> for <code>taxonomy-aligned</code> activities for the <span style="color: red;">whole firm</span> using the information in Table 4 and 5.</p></li>
+</ul>
+<p><span class="math display">\[
+\begin{aligned}
+SUM_{activities} &amp;= 0.2682 + 0.1568 +.. \text{for Revenue} \\
+SUM_{activities} &amp;= 0.1175 + 0.338 +.. \text{for CAPEX} \\
+SUM_{activities} &amp;= 0.1 + 0.24 +.. \text{for OPEX}
+\end{aligned}
+\]</span></p>
+</section>
+<section id="d.-potential-for-double-counting" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="d.-potential-for-double-counting">[D]. Potential for Double-Counting</h2>
+<p>In Annex 1, par 1.2. Disclosure Delegated Acts, firms have to explain how they avoid <strong>double-counting</strong> in the allocation of Revenue, CAPEX, OPEX across activities.</p>
+<p>The subsidiary of <em>Gensler AG</em>, <em>Sasaki</em>, will be consolidated in the nonfinancial report of <em>Gensler AG</em>. <em>Sasaki</em> is engaged in <strong>similar economic activities</strong> as its parent company. Since <em>Gensler AG</em> only has contracts with customers where both new buildings are constructed and existing buildings are renovated simultaneously, the <code>taxonomy-aligned</code> turnover, CapEx, and OpEx are allocated towards both economic activities by the financial reporting department. Due to differences in the DNSH check, the <code>taxonomy-aligned</code> values partly vary between the two economic activities even though they stem from the same underlying contracts. Table 6 reports the values for both economic activities separately as well as for the total firm.</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/t6.png" class="img-fluid figure-img" width="500"></p>
+<figcaption class="margin-caption">Table 6. Taxonomy-aligned turnover, CapEx, OpEx of Sasaki</figcaption>
+</figure>
+</div>
+<p>Let’s say the CEO of parent company <em>Gensler AG</em> wishes to report taxonomy quotas that are as high as possible. Now let’s calculate the taxonomy-aligned turnover, CapEx, and OpEx for the subsidiary <em>Sasaki</em> according to the EU taxonomy regulation and considering the CEO’s objective.</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/t7.png" class="img-fluid figure-img" width="500"></p>
+<figcaption class="margin-caption">Table 7. Additional information on Sasaki</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>issue</strong>: double-counting possible (not allowed)</p>
+<ul>
+<li><p>Solution I. <img src="images/p1.png" class="img-fluid" width="1000"></p></li>
+<li><p>Solution II. <img src="images/p2.png" class="img-fluid" width="1000"></p></li>
+<li><p>Allocation of activities only to objective <strong>construction of new buildings</strong> yields the highest taxonomy quotas as requested by the CEO. The reported values are subject to the individual allocation decision made by firm management and not objectively justified by the EU taxonomy regulation.</p></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="bibliography" class="level2">
+<h2 class="anchored" data-anchor-id="bibliography">Bibliography</h2>
+<p>[1] Climate Delegated Act: Commission Delegated Regulation (EU) 2021/2139. Available at https://eurlex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:02021R2139-20250108 (consolidated version, January 8, 2025).</p>
+<p>[2] Environmental Delegated Act: Commission Delegated Regulation (EU) 2023/2486. Available at https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=OJ:L_202302486 (November 11, 2023).</p>
+<p>[3] Disclosures Delegated Act: Commission Delegated Regulation (EU) 2021/2178. Available at https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:02021R2178-20240101 (consolidated version, January 1, 2024).</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<script src="https://utteranc.es/client.js" repo="mainkoon81.github.io/minkun-website" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><span class="faux-block">© 2025 Minkun Kim</span></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
