@@ -40,7 +40,7 @@ To meet the E-objectives - Climate, Water, Pollution, Biodiversity, Circular Eco
 The construction company *Gensler AG* is preparing its nonfinancial report in accordance with the **EU Taxonomy regulation 2020/852** (EU) for its most recent financial year. To prepare for the EU Taxonomy reporting process, the firm analyzes its **activities** according to its existing operating segments. The geographic segments reflect the operating focus of the business as well as its presence in key international regions and markets. 
 
 
-![Figure 1. EU Taxonomy Regulation is accompanied by several Delegated Acts as well as additional guidance.](images/act.png){width="1000"}
+![EU Taxonomy Regulation is accompanied by several Delegated Acts as well as additional guidance.](images/act.png){width="1000"}
 
 
 
