@@ -146,6 +146,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Sustainability</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="../../../whiteboard04/index.html"> 
+<span class="menu-text">Design</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../../../cv/index.html"> 
 <span class="menu-text">CV</span></a>
   </li>  
@@ -231,7 +235,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 <p>In AWS, we first create an S3 bucket and a designated folder to store the raw data. The following Python script is used to retrieve data from the API and perform initial processing. By “processing the raw data,” it mainly mean extracting the required columns from the XML response and uploading the collected dataset to the S3 data lake.</p>
-<div id="792aedac" class="cell" data-execution_count="1">
+<div id="5e2bc881" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#######################################################################################</span></span>
@@ -690,7 +694,7 @@ Systems, 33(4), 1452–1466.
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/mainkoon81\.github\.io\/minkun-website\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

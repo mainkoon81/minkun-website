@@ -140,6 +140,10 @@ window.Quarto = {
 <span class="menu-text">Sustainability</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="../../../whiteboard04/index.html"> 
+<span class="menu-text">Design</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../../../cv/index.html"> 
 <span class="menu-text">CV</span></a>
   </li>  
@@ -311,7 +315,7 @@ Note
 <div class="quarto-figure quarto-figure-center page-columns page-full">
 <figure class="figure page-columns page-full">
 <p><img src="images/t4.png" class="img-fluid figure-img" width="500"></p>
-<figcaption class="margin-caption">Table 4. Total turnover, capital expenditures, operating expenses</figcaption>
+<figcaption class="margin-caption">Table 4. Total turnover, capital expenditures, operating expenses. Once the activity is considered as T-eligible, its entire business portion is used to compute the T-eligible quota.</figcaption>
 </figure>
 </div>
 <div class="quarto-figure quarto-figure-center page-columns page-full">
@@ -327,7 +331,7 @@ Note
 \end{aligned}
 \]</span></p>
 <ul>
-<li>[i]. Let’s calculate the <strong>taxonomy quotas</strong> for <code>taxonomy-eligible</code> activities (eligible turnover, CapEx, OpEx) per <span style="color: red;">activity</span> using the information in Table 4. <img src="images/a.png" class="img-fluid" width="1000"></li>
+<li>[i]. Let’s calculate the <strong>taxonomy quotas</strong> for <code>taxonomy-eligible</code> activities (eligible turnover, CapEx, OpEx) per <span style="color: red;">activity</span> using the information in Table 4. <img src="images/a.png" class="img-fluid" width="1000" alt="For each activity, we compute the three KPIs"></li>
 <li>[ii]. Let’s calculate the <strong>taxonomy quotas</strong> for <code>taxonomy-eligible</code> activities (eligible turnover, CapEx, OpEx) for the <span style="color: red;">whole firm</span> using the information in Table 4.</li>
 </ul>
 <p><span class="math display">\[
@@ -469,7 +473,7 @@ Note
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/mainkoon81\.github\.io\/minkun-website\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
