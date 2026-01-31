@@ -18,7 +18,7 @@ comments:
     repo: "mainkoon81.github.io/minkun-website"
 ---
 
-![Be transparent: How much GREEN are you?](images/Smokestacks.jpeg){width="1000"}
+![Be transparent: In what way are you GREEN?](images/Smokestacks.jpeg){width="1000"}
 
 ESRS (EU Sustainability Reporting Standards) developed by EFRAG (EU Financial Reporting Advisory Group) provides mandatory reporting standards under the **CSRD** (Corporate Sustainability Reporting Directive) in the EU. ESRS define how companies must report on sustainability-related impacts, risks, and opportunities. They include two cross-cutting standards (ESRS 1 and ESRS 2) that explain the general principles, reporting structure, and required company-wide disclosures. The **environmental standards** `(E1–E5)` cover climate change, pollution, water and marine resources, biodiversity, and resource use and circular economy. The **social standards** `(S1–S4)` focus on a company’s own workforce, workers in the value chain, affected communities, and consumers. Finally, the **governance standards** `(G1)` addresses ethical business conduct, including corruption, lobbying, and transparency. ESRS operationalises `DMA` to assess both inward financial risk and outward environmental effect.  
 

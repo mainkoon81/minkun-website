@@ -21,8 +21,8 @@ website:
         href: whiteboard02/index.qmd
       - text: "Sustainability"
         href: whiteboard03/index.qmd
-      #- text: "Design"
-      #  href: whiteboard04/index.qmd
+      - text: "Design"
+        href: whiteboard04/index.qmd
       - text: "CV"
         href: cv/index.qmd
     

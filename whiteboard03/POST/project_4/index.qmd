@@ -104,7 +104,7 @@ To comply with the EU Taxonomy, *Gensler AG* must report the **taxonomy quotas**
 
 
 
-![Table 4. Total turnover, capital expenditures, operating expenses](images/t4.png){width="500"}
+![Table 4. Total turnover, capital expenditures, operating expenses. Once the activity is considered as T-eligible, its entire business portion is used to compute the T-eligible quota.](images/t4.png){width="500"}
 
 
 
@@ -118,7 +118,7 @@ $$
 $$
 
 - [i]. Let's calculate the **taxonomy quotas** for `taxonomy-eligible` activities (eligible turnover, CapEx, OpEx) per <span style="color: red;">activity</span> using the information in Table 4.
-![](images/a.png){width="1000"}
+![For each activity, we compute the three KPIs](images/a.png){width="1000"}
 - [ii]. Let's calculate the **taxonomy quotas** for `taxonomy-eligible` activities (eligible turnover, CapEx, OpEx) for the <span style="color: red;">whole firm</span> using the information in Table 4.
 
 $$
