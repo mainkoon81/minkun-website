@@ -111,58 +111,57 @@ Now, let's prepare the **disclosure requirements** of ESRS E1 as far as possible
 
 
 ::: callout-note
-**Disclosure Requirement E1-1** – `Transition plan` for climate change mitigation:
+**Disclosure Requirement E1-1** – **Transition plan** for climate change mitigation:
 
-- We can describe the entity's transition plan to reduce carbon impact: 
+- In our report, we can describe the entity's transition plan to reduce carbon impact: 
   - Target to reduce emissions by 50% by the year 2035.
   - Key actions include replacing 20% of its truck fleet with battery-powered vehicles
   - Plan adoption by executives and supervisory board
 
-**Disclosure Requirement E1-2** –  Identification of climate-related risks and scenario analysis:
+**Disclosure Requirement E1-2** –  **Identification** of climate-related risks and scenario analysis:
 
 - No further information available here, but we can describe ways to access short-term, medium-term, long-term business activities in light of climate related risks, differentiating the risk into physical or transition risk...and methodologies? scenario analysis? 
 
 
-**Disclosure Requirement E1-3** –  Resilience in relation to climate change: 
+**Disclosure Requirement E1-3** –  **Resilience** in relation to climate change: 
 
 - No further information available here, but we can describe the resilience of the firm's strategy and business model to climate-related risks. 
   - include the results of a climate resilience analysis 
   - include significant areas of uncertainty in the assessment 
   - include business model to climate change over short, medium and long term
 
-**Disclosure Requirement E1-4** –  Policies related to climate change mitigation and adaptation:
+**Disclosure Requirement E1-4** –  **Policies** related to climate change mitigation and adaptation:
 
 - No further information available here, but we can describe policies that address climate change mitigation and adaptation IRO.
 
 
-**Disclosure Requirement E1-5** –  Actions and resources in relation to climate change 
+**Disclosure Requirement E1-5** –  **Actions and resources** in relation to climate change 
 mitigation and adaptation:
 
-- We can describe key actions to address climate change mitigation and adaptation.
+- In our report, we can describe key actions to address climate change mitigation and adaptation.
   - purchasing EV to replace the old truck fleet.
   - Already **achieved** 10% reduction, so we expect another 10% next year 
 
 
-**Disclosure Requirement E1-6** –  Targets related to climate change:
+**Disclosure Requirement E1-6** –  **Targets** related to climate change:
 
-- We can describe targets related to climate change mitigation and adaptation.
+- In our report, we can describe targets related to climate change mitigation and adaptation.
   - Target of 50 % reduction by 2035 relative to base year (2016)
 
 
-**Disclosure Requirement E1-7** –  Energy consumption and mix: 
+**Disclosure Requirement E1-7** –  **Energy** consumption and mix: 
 
 - Information is available only partially, but we can describe energy consumption and composition of energy sources consumed. 
 
 
-**Disclosure Requirement E1-8** –  Gross Scope 1,2,3 GHG emissions: 
+**Disclosure Requirement E1-8** –  **Gross Scope 1,2,3** GHG emissions: 
 
 - Total Emission: 200,000.28 tons + 48,606.25 tons + 139,445.02 tons = 388051,55 tons
   - Scope 1: 195,813.33 tons + 4,181.25 tons + 5.7 tons = 200,000.28 tons 
   - Scope 2: 47,378.25 tons + 1,228 tons = 48,606.25 tons
   - Scope 3:  115,448.73 tons + 23,996.29 tons = 139,445.02 tons 
 
-**Disclosure Requirement E1-9** –  GHG removals and GHG mitigation projects financed through 
-carbon credits: 
+**Disclosure Requirement E1-9** –  **GHG removals and mitigation** financed through carbon credits: 
 
 - No actions were undertaken during the reporting year.
 

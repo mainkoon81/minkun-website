@@ -51,9 +51,6 @@ M.Sc Sustainable Energy System <br>
 M.Sc Data Analytics <br>
 <small>Dublin City University, Ireland </small>
 
-H.Dip Statistics <br>
-<small>University College Dublin, Ireland </small>
-
 B.Sc Urban Engineering <br>
 <small>Hongik University, South Korea </small>
 :::
