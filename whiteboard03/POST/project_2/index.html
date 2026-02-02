@@ -70,6 +70,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -264,8 +293,8 @@ ul.task-list li input[type="checkbox"] {
 <figcaption class="margin-caption"><strong>Figure 1.</strong> Four building blocks (reporting areas) based on ESRS standard - S1</figcaption>
 </figure>
 </div>
-<section id="case-study---reporting-standards-regarding-s1" class="level1 page-columns page-full">
-<h1>Case Study - Reporting Standards regarding S1</h1>
+<section id="case-study-a---s1-social-reporting" class="level1 page-columns page-full">
+<h1>Case Study (a) - S1 Social Reporting</h1>
 <p><em>ClimAID Services AG</em> in Bochum is preparing the social section of the sustainability report in accordance with <strong>ESRS-S1</strong>. At this stage, the focus is on the preparation of the <code>Metrics and Targets disclosures</code>. The relevant disclosure requirements have been highlighted in red in the attached file. Other ESRS-S1 components such as <code>policies</code>, <code>targets</code>, <code>training hours</code>, <code>health and safety</code>, etc. will be addressed separately at a later stage. We have received HR info covering both head counts and FTE (full-time equivalent), measured on an end-of-year basis.</p>
 <div class="quarto-figure quarto-figure-center page-columns page-full">
 <figure class="figure page-columns page-full">
@@ -344,6 +373,66 @@ Note
 <li>File may not cover individual deals (e.g.&nbsp;sabatticals, maternal/paternal leave, sick days, …) ⇒ <code>plan necessary analyses ahead to avoid receiving data in an aggregated format</code></li>
 </ul></li>
 </ul>
+</section>
+</section>
+<section id="case-study-b---s1-social-reporting" class="level1">
+<h1>Case Study (b) - S1 Social Reporting</h1>
+<p>Let’s say the CAP GmbH &amp; Co.&nbsp;KGaA is a rapidly growing manufacturer of hydrogen-powered vehicles in Germany. In its German and Austrian facilities, white-collar workers are on a 38.75 hours 5-day work week enjoying 30 days of vacation per year. In the U.S., white-collar workers usually work 7.5 hours on each of the six workdays per week after accounting for vacation. CAP’s only production facility is located in the U.S. where blue-collar workers account for 75% of the total U.S. workforce. Blue-collar workers are scheduled on average 15% more hours than white-collar workers.</p>
+<p>The data provided below is from each factory management of the three facilities in Germany, Austria, and the U.S. for each quarter of the current reporting period.</p>
+<p><img src="images/tab.png" class="img-fluid" width="1000"></p>
+<p>CAP needs to prepare a disclosure according to S1.36c and S1.AR25 (<strong>DR S1-13</strong>: Health and Safety Metrics). According to the relevant Draft ESRS, it shall report:</p>
+<p><img src="images/dr s1.png" class="img-fluid" width="1000"></p>
+<section id="a.-data-point-computation-for-reporting-i" class="level2">
+<h2 class="anchored" data-anchor-id="a.-data-point-computation-for-reporting-i">[A]. Data point computation for reporting I</h2>
+<p>Considering the disclosure requirements in S1.36c, let’s calculate the number and rate of recordable work related accidents a.k.a the accident frequency rate (AFR) for each country as well as for the company in total (i.e., over all countries) in the dimension commonly used for its reporting on an annual basis ( Assuming that one year consists of 52 weeks).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+\text{AFR} = \frac{NO.of.cases}{total.hours \times population} \times 1,000K
+\]</span></p>
+<p>For Germany, <span class="math display">\[
+\text{AFR}_{GER} = \frac{1}{38.75h \times (52week-30days/5days) \times 100 workers} \times 1,000K = 5.61
+\]</span> For Austria, <span class="math display">\[
+\text{AFR}_{AUS} = \frac{2}{38.75h \times (52week-30days/5days) \times 250 workers} \times 1,000K = 4.49
+\]</span></p>
+<p>For USA, <span class="math display">\[
+\text{AFR}_{USA} = \frac{12\times 1,000K}{\underbrace{0.25*[7.5h \times 6d \times 52w \times 1500 p]}_{\text{white-collar workers}}+\underbrace{0.75*[7.5h(1+0.15) \times 6d \times 52w \times 1500p]}_{\text{blue-collar workers}}}  = 3.07
+\]</span></p>
+<p>For firm-wide, <span class="math display">\[
+\text{AFR}_{firm} = \frac{1+2+12}{\underbrace{178,250}_{\text{Germany}}+\underbrace{445,625}_{\text{Austria}}+\underbrace{877,500+3,027,375}_{\text{USA}}} \times 1,000K = 3.31
+\]</span></p>
+</div>
+</div>
+</section>
+<section id="b.-data-point-computation-for-reporting-ii" class="level2">
+<h2 class="anchored" data-anchor-id="b.-data-point-computation-for-reporting-ii">[B]. Data point computation for reporting II</h2>
+<p>The CAP GmbH &amp; Co.&nbsp;KGaA is considering a takeover of the CUber AG based in Herne, Germany. CAP’s board of directors, however, is unsure whether the working conditions at CUber are too unsafe and may prohibit the takeover. <strong>If the accident frequency rate (AFR) exceeds the one of CAP by more than 20%, the deal fails</strong>.</p>
+<p>In the current reporting year, 6.7‰ (1/1,000) of CUber’s employees had an accident on average per year. At CUber, the average employee works for 8 hours on 220 days a year. CUber has a total number of 240 employees.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Let’s see if the deal fail based on the accident frequency rate criterion. <span class="math display">\[
+\text{AFR}_{new} = \frac{0.0067}{8h \times 220days} \times 1,000K = 3.81
+\]</span> Let’s reconcile CUber’s accident frequency measure with the dimension used for S1 reporting and compare the values for the whole firm between CAP and CUber. <strong>If the accident frequency rate (AFR) exceeds the one of CAP by more than 20%, the deal fails</strong>. This means <span class="math display">\[
+\text{+20 percent of AFR}_{firm}:3.31 \times (1+0.2) = 3.97 \quad \text{vs} \quad \text{AFR}_{new} : 3.81
+\]</span> Therefore, the deal does not fail based on the AFR criterion.</p>
+</div>
+</div>
 </section>
 <section id="bibliography" class="level2">
 <h2 class="anchored" data-anchor-id="bibliography">Bibliography</h2>
