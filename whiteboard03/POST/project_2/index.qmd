@@ -39,7 +39,7 @@ ESRS (EU Sustainability Reporting Standards) provides mandatory reporting standa
 
 ![**Figure 1.** Four building blocks (reporting areas) based on ESRS standard - S1](images/ESRS S1.jpg){width="1000"}
 
-# Case Study - Reporting Standards regarding S1
+# Case Study (a) - S1 Social Reporting
 
 *ClimAID Services AG* in Bochum is preparing the social section of the sustainability report in accordance with **ESRS-S1**. At this stage, the focus is on the preparation of the `Metrics and Targets disclosures`. The relevant disclosure requirements have been highlighted in red in the attached file. Other ESRS-S1 components such as `policies`, `targets`, `training hours`, `health and safety`, etc. will be addressed separately at a later stage. We have received HR info covering both head counts and FTE (full-time equivalent), measured on an end-of-year basis.   
 
@@ -117,6 +117,89 @@ Let me name difficulties we could likely encounter when working with files like 
   - Calculating AVG or fluctuations might be difficult, if file is based on end-of-year data ⇒ `obtain data that covers intra-year flow of personell` 
   - Data might need to be broken down into more detail (e.g., salary broken down into fixed and variable components) ⇒ `plan necessary analyses ahead to avoid receiving data in an aggregated format`
   - File may not cover individual deals (e.g. sabatticals, maternal/paternal leave, sick days, …) ⇒ `plan necessary analyses ahead to avoid receiving data in an aggregated format`
+
+
+
+
+# Case Study (b) - S1 Social Reporting
+
+Let's say the CAP GmbH & Co. KGaA is a rapidly growing manufacturer of hydrogen-powered vehicles in Germany. In its German and Austrian facilities, white-collar workers are on a 38.75 hours 5-day work week enjoying 30 days of vacation per year. In the U.S., white-collar workers usually work 7.5 hours on each of the six workdays per week after accounting for vacation. CAP's only production facility is located in the U.S. where blue-collar workers account for 75% of the total U.S. workforce. Blue-collar workers are scheduled on average 15% more hours than white-collar workers.
+
+The data provided below is from each factory management of the three facilities in Germany, Austria, and the U.S. for each quarter of the current reporting period.
+
+![](images/tab.png){width="1000"}
+
+CAP needs to prepare a disclosure according to S1.36c and S1.AR25 (**DR S1-13**: Health and Safety Metrics). According to the relevant Draft ESRS, it shall report:
+
+
+![](images/dr s1.png){width="1000"}
+
+
+## \[A\]. Data point computation for reporting I
+
+Considering the disclosure requirements in S1.36c, let's calculate the number and rate of recordable work related accidents a.k.a the accident frequency rate (AFR) for each country as well as for the company in total (i.e., over all countries) in the dimension commonly used for its reporting on an annual basis (
+Assuming that one year consists of 52 weeks). 
+
+::: callout-note
+$$
+\text{AFR} = \frac{NO.of.cases}{total.hours \times population} \times 1,000K 
+$$
+
+
+For Germany,
+$$
+\text{AFR}_{GER} = \frac{1}{38.75h \times (52week-30days/5days) \times 100 workers} \times 1,000K = 5.61
+$$
+For Austria,
+$$
+\text{AFR}_{AUS} = \frac{2}{38.75h \times (52week-30days/5days) \times 250 workers} \times 1,000K = 4.49
+$$
+
+For USA,
+$$
+\text{AFR}_{USA} = \frac{12\times 1,000K}{\underbrace{0.25*[7.5h \times 6d \times 52w \times 1500 p]}_{\text{white-collar workers}}+\underbrace{0.75*[7.5h(1+0.15) \times 6d \times 52w \times 1500p]}_{\text{blue-collar workers}}}  = 3.07
+$$
+
+
+For firm-wide,
+$$
+\text{AFR}_{firm} = \frac{1+2+12}{\underbrace{178,250}_{\text{Germany}}+\underbrace{445,625}_{\text{Austria}}+\underbrace{877,500+3,027,375}_{\text{USA}}} \times 1,000K = 3.31
+$$
+::: 
+
+
+
+
+
+## \[B\]. Data point computation for reporting II
+
+The CAP GmbH & Co. KGaA is considering a takeover of the CUber AG based in Herne, Germany. CAP's board of directors, however, is unsure whether the working conditions at CUber are too unsafe and may prohibit the takeover. **If the accident frequency rate (AFR) exceeds the one of CAP by more than 20%, the deal fails**. 
+
+In the current reporting year, 6.7‰ (1/1,000) of CUber's employees had an accident on average per year. At CUber, the average employee works for 8 hours on 220 days a year. CUber has 
+a total number of 240 employees. 
+
+
+::: callout-note
+
+Let's see if the deal fail based on the accident frequency rate criterion. 
+$$
+\text{AFR}_{new} = \frac{0.0067}{8h \times 220days} \times 1,000K = 3.81
+$$
+Let's reconcile CUber's accident frequency measure with the dimension used for S1 reporting and compare the values for the whole firm between CAP and CUber. **If the accident frequency rate (AFR) exceeds the one of CAP by more than 20%, the deal fails**. This means
+$$
+\text{+20 percent of AFR}_{firm}:3.31 \times (1+0.2) = 3.97 \quad \text{vs} \quad \text{AFR}_{new} : 3.81
+$$
+Therefore, the deal does not fail based on the AFR criterion.
+
+:::
+
+
+
+
+
+
+
+
 
 
 
