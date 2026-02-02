@@ -429,7 +429,7 @@ Note
 <p>Let’s see if the deal fail based on the accident frequency rate criterion. <span class="math display">\[
 \text{AFR}_{new} = \frac{0.0067}{8h \times 220days} \times 1,000K = 3.81
 \]</span> Let’s reconcile CUber’s accident frequency measure with the dimension used for S1 reporting and compare the values for the whole firm between CAP and CUber. <strong>If the accident frequency rate (AFR) exceeds the one of CAP by more than 20%, the deal fails</strong>. This means <span class="math display">\[
-\text{+20% of AFR}_{firm}:3.31 \times (1+0.2) = 3.97 \quad \text{vs} \quad \text{AFR}_{new} : 3.81
+\text{+20 percent of AFR}_{firm}:3.31 \times (1+0.2) = 3.97 \quad \text{vs} \quad \text{AFR}_{new} : 3.81
 \]</span> Therefore, the deal does not fail based on the AFR criterion.</p>
 </div>
 </div>
@@ -516,7 +516,7 @@ Note
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/mainkoon81\.github\.io\/minkun-website\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

@@ -182,10 +182,16 @@ a total number of 240 employees.
 ::: callout-note
 
 Let's see if the deal fail based on the accident frequency rate criterion. 
+Note that the yearly accident rate of CUber is 0.0067. This means
+$$
+\text{Annual Accident rate} = \frac{1.608 \text{accident_count}}{240workers} = 0.0067
+$$
+
+Therefore,
 $$
 \text{AFR}_{new} = \frac{0.0067}{8h \times 220days} \times 1,000K = 3.81
 $$
-Let's reconcile CUber's accident frequency measure with the dimension used for S1 reporting and compare the values for the whole firm between CAP and CUber. **If the accident frequency rate (AFR) exceeds the one of CAP by more than 20%, the deal fails**. This means
+Let's reconcile CUber's accident frequency measure with the dimension used for S1 reporting and compare the values for the whole firm between CAP and CUber. Note that **If the accident frequency rate (AFR) exceeds the one of CAP by more than 20%, the deal fails**. This means
 $$
 \text{+20 percent of AFR}_{firm}:3.31 \times (1+0.2) = 3.97 \quad \text{vs} \quad \text{AFR}_{new} : 3.81
 $$
