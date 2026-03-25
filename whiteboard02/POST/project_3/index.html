@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Minkun Kim">
-<meta name="dcterms.date" content="2025-10-28">
+<meta name="dcterms.date" content="2026-03-22">
 
-<title>Quality Monitoring for Casting RUL Analysis – Minkun Kim</title>
+<title>Substation Data Pipelining with GCP – Minkun Kim</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -102,7 +137,7 @@ window.Quarto = {
 
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -170,13 +205,14 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Quality Monitoring for Casting RUL Analysis</h1>
+<h1 class="title">Substation Data Pipelining with GCP</h1>
   <div class="quarto-categories">
     <div class="quarto-category">data quality monitoring</div>
   </div>
@@ -196,7 +232,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 28, 2025</p>
+      <p class="date">March 22, 2026</p>
     </div>
   </div>
   
@@ -208,148 +244,1051 @@ window.Quarto = {
 </header>
 
 
-<p>During continuous casting machine (CCM) operation, the main production issue that comes up during the operation of sleeves is that defects appear on the surface of the copper pipe of the sleeve and distort the profile of its inner cavity.</p>
-<p>The automated process control system records casting parameters into a production database. The collected data represent averaged process parameters across all strands within each cast, with the primary strand-level variation captured through mould sleeve resistance.</p>
-<p>Following mould sleeve removal and inspection, process parameters, ingot geometry, and related operational attribute data are extracted from the SCADA system. Although sourced from a real production environment, the data were subsequently cleaned, aggregated, and pre-processed to support Remaining Useful Life (RUL) modeling.</p>
-<p>The RUL variable in the dataset is derived from the <code>resistance (tonn)</code> (sleeve failure) variable by computing for each sleeve, “crystallizer”, “casting stream”, the difference between the highest observed resistance value and the current resistance value.</p>
-<p>The expected Useful Life in tons should be as follows:</p>
-<ul>
-<li>17,000 tons for 180x180,</li>
-<li>13,000 tons for 150x150.</li>
-</ul>
-<p>We might want to predict the remaining time the sleeve can operate before failing, using sensor data and historical patterns to enable predictive maintenance.</p>
-<ul>
-<li><p>Purpose: To estimate the time (or usage cycles, distance) until a component or system needs repair or replacement, shifting from reactive to proactive maintenance.</p></li>
-<li><p>Data Inputs: Relies on sensor data (vibration, temperature, pressure, etc.) and operational history from IoT devices, analyzed to spot degradation trends.</p></li>
-<li><p>Statistical survival modeling</p>
-<ul>
-<li>The characteristics of the survival function can be calculated as 1 — cdf. Comparing current condition to historical failure data.</li>
-</ul></li>
-<li><p>Degradation modeling (linear/exponential)</p>
-<ul>
-<li><ol type="1">
-<li>Linear degradation: the prediction is presented as a straight line while historical data determine its slope; it is usually applied if the system does not accumulate damage (degradation).</li>
-</ol></li>
-<li><ol start="2" type="1">
-<li>Exponential degradation: the prediction is presented as an exponent; it is usually applied if the system can accumulate damage cumulatively.</li>
-</ol></li>
-</ul></li>
-<li><p>Similarity-based comparisons</p>
-<ul>
-<li><ol type="1">
-<li>Direct comparison of time series using proximity metrics such as Dynamic Time Warping (DTW) or proximity-based clustering / classification methods.</li>
-</ol></li>
-<li><ol start="2" type="1">
-<li>Selection of features from a time series and further comparison of the obtained feature vectors (i.e., proximity metrics, clustering).</li>
-</ol></li>
-</ul></li>
-<li><p>Output: A statistical prediction of RUL, often with a confidence interval, showing how much life is left.</p></li>
-<li><p>Benefits: Reduces unscheduled downtime, optimizes maintenance planning, extends asset life, and fills knowledge gaps left by retiring experts.</p></li>
-</ul>
-<p>The dataset uses:</p>
-<ul>
-<li><p><code>Resistance (tonn)</code>: A proxy for total life consumed, i.e., how many tons of steel were cast before failure.</p></li>
-<li><p><code>RUL</code>: Calculated as:</p></li>
-</ul>
-<p><span class="math display">\[
-RUL = \mathbb{max}( resistance ) - current \; resistance
-\]</span> So it is a declining time-to-failure indicator which is a standard in supervised RUL estimation datasets. Time-aligned degradation data (like resistance over time) is used to estimate RUL via survival models.</p>
-<p>The project’s goal is to ensure the quality of data collected during the operation of the Continuous Casting Machine (CCM). That data includes sleeve resistance, strand identifiers, and up to 15 process parameters.</p>
-<p>Here, I’m laying the foundation: collecting reliable, validated, complete, fresh, and interpretable data that can power technical diagnostics and predictive maintenance.</p>
-<p>I designed and implemented a scalable data warehouse on BigQuery using a tiered Bronze–Silver–Gold structure inspired by Medallion Architecture. Data ingestion was handled through Kafka, while transformations and modeling were managed with dbt to ensure modular, version-controlled pipelines.</p>
-<p>For orchestration, I used Airflow, enabling automated execution, validation, and alerting to maintain high pipeline reliability. This layered approach allowed us to clearly separate raw, cleaned, and analytics-ready data, improving data governance, transparency, and access control across the system.</p>
-<p>As a result, our BI dashboards will be consistently refreshed with accurate, high-quality data, supporting timely and reliable decision-making. The system also introduced robust monitoring and clear data lineage, with ongoing efforts focused on reducing latency and further optimizing observability.</p>
-<section id="product-requirements-document-prd" class="level2">
+<section id="product-requirements-document-prd" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="product-requirements-document-prd">Product Requirements Document (PRD)</h2>
+<section id="a.-overview" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="a.-overview">[A]. Overview</h3>
+<section id="background" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="background">(1) background</h4>
+<p>The ongoing transition toward a climate-neutral energy system is accelerating the integration of decentralized renewable energy sources - often referred to as sector coupling - such as photovoltaic (PV) systems and wind turbines, along with the electrification of transportation through electric vehicles (EVs). Consequently, as described in Figure 01, current low-voltage (LV) grids are experiencing increasing operational stress due to bi-directional power flows and rising peak demand. In this evolving environment, distribution system operators (DSOs) are tasked with ensuring secure and reliable grid operation. Real-time monitoring of the grid state, combined with accurate assessment of peak load (energy consumption) and peak generation (energy injection), is therefore essential to prevent thermal overloading, mitigate voltage violations, and maintain system stability</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/powerGrid.png" class="img-fluid figure-img" width="600"></p>
+<figcaption class="margin-caption">Figure 01. Decentralized energy consumption and generation in low-voltage grids: It leads to bi-directional power flows - power no longer flows uni-directionally from the transformer to consumers -, increasing the risk of overloading and voltage instability.</figcaption>
+</figure>
+</div>
+</section>
+<section id="objective" class="level4">
+<h4 class="anchored" data-anchor-id="objective">(2) objective</h4>
+<p>Smart secondary substations such as <strong>digiONS</strong> provide real-time feeder cable monitoring, which significantly enhances system observability. However, substation-level monitoring systems with <strong>digiONS</strong>, particularly those based on SCADA infrastructure, are susceptible to <code>measurement noise</code>, <code>incomplete sampling intervals</code>, <code>aggregation artifacts</code>, and <code>communication failures</code>. These issues reduce the reliability of the data and make direct analytical use difficult. Consequently, <strong>systematic data acquisition control and quality assurance mechanisms are indispensable for maintaining the credibility of the LV grid analysis.</strong></p>
 <ul>
-<li>[A]. Overview
+<li><code>Goal</code>: Our goal is to ensure the quality of data collected during the operation of the smart secondary substations. We design and implement a scalable data pipeline for operational substation monitoring data using a <strong>Medallion architecture</strong> (Bronze → Silver → Gold). The proposed pipeline is designed to:
 <ul>
-<li><ol type="i">
-<li>background</li>
-</ol></li>
-<li><ol start="2" type="i">
-<li>objective</li>
-</ol></li>
+<li>ingest operational measurements from substation monitoring systems</li>
+<li>perform data quality validation</li>
+<li>transform raw data into analysis-ready datasets</li>
+<li>provide monitoring dashboards and automated alerting mechanisms.</li>
 </ul></li>
+</ul>
+</section>
+</section>
+<section id="b.-data" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="b.-data">[B]. Data:</h3>
+<p>The empirical data used in this study are sourced from the publicly available Kaggle dataset: <em>Power Exchange Data Germany</em>. The dataset provides detailed operational measurements for one representative substation. The investigated substation supplies a LV grid consisting of 89 households, 450 kW of installed PV capacity, and a battery storage system rated at 300 kW / 850 kWh. The operational dataset collected from this substation contains <code>active power</code> measurements recorded at the LV busbar. These measurements are particularly useful for system analysis, as they reflect the combined effects of household demand, photovoltaic generation injected into the grid, and battery operation under bidirectional power flow conditions. In this chapter, these active power measurements serve as the primary basis for investigating data acquisition consistency and quality assurance aspects.</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/data02.png" class="img-fluid figure-img" width="800"></p>
+<figcaption class="margin-caption">Figure 02. Substation-level Active Power measurements and sample counts.</figcaption>
+</figure>
+</div>
+<p>A snapshot of the dataset is shown in Figure 02. Active power value is reported as 15-minute average values (kW), computed from underlying 1-minute measurements. In addition to the average value, the dataset includes the corresponding minimum and maximum 1-minute readings within each aggregation interval, as well as the number of valid samples collected from each 15-minute interval in the SCADA-based aggregation process. However, as discussed earlier, the dataset may contain data quality issues commonly associated with SCADA monitoring systems, such as incomplete sampling intervals, aggregation artifacts, and communication failures. The <strong>Available Data Count</strong> column shown in Figure 02. reflects this aspect by indicating the number of available measurements used in the aggregation of each interval. To examine these data quality issues, this study formulates eight assurance standards at the level of each 15-minute observation interval:</p>
+<ul>
+<li><strong>Missing timestamp</strong>: each record is checked for missing Timestamp value, which may arise from communication failures or related disruptions.</li>
+<li><strong>Missing available data count</strong>: each record is checked for the presence of the Available Data Count value, which may arise from communication failures or related disruptions.</li>
+<li><strong>Missing signal identifier</strong>: each record is checked for a valid signal identifier so that observations can be uniquely referenced.</li>
+<li><strong>Duplicate signal identifier</strong>: each record is checked to ensure that no duplicated signal identifier exists, so that observations can be uniquely referenced.</li>
+<li><strong>Timestamp misalignment</strong>: each Timestamp value is checked to confirm that it falls on a quarter-hour boundary (00, 15, 30, or 45 minutes), as expected for a stable 15-minute signal feed.</li>
+</ul>
+<p>In addition to these structural issues, this study also considers consistency-related problems in the reported active power measurement statistics.</p>
+<ul>
+<li><strong>Invalid minimum-average relationship</strong>: the reported Active Power min value must not exceed the Active Power AVG value, in accordance with the expected ordering of aggregated statistics.</li>
+<li><strong>Invalid average-maximum relationship</strong>: the reported Active Power AVG value must not exceed the Active Power max value, since such a case would indicate inconsistency in the aggregated statistics.</li>
+<li><strong>Unexpected sample count</strong>: the aggregation window is checked for completeness by requiring the Available Data Count measurements within each 15-minute interval to equal 15.</li>
+</ul>
+<p>Among these, <strong>unexpected sample count</strong> is particularly important, since deviations from this expected count may indicate irregularities in the SCADA-based acquisition process. Taken together, these quality issues provide a practical basis for judging whether a recorded interval is sufficiently reliable for subsequent analysis.</p>
+</section>
+<section id="c.-kpis" class="level3">
+<h3 class="anchored" data-anchor-id="c.-kpis">[C]. KPIs:</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 26%">
+<col style="width: 46%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Target</th>
+<th>Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Completeness rate</td>
+<td>≥ 99%</td>
+<td>NO.valid intervals / 96</td>
+</tr>
+<tr class="even">
+<td>Timestamp Alignment</td>
+<td>96</td>
+<td>NO.aligned intervals [00 15 30 45]</td>
+</tr>
+<tr class="odd">
+<td>Q-Test Pass Rate</td>
+<td>≥ 95%</td>
+<td>dbt test result</td>
+</tr>
+<tr class="even">
+<td>E[t] to Acknowledge</td>
+<td>≤ 1 hour</td>
+<td>As of the alert time</td>
+</tr>
+<tr class="odd">
+<td>E[t] to Repair</td>
+<td>≤ 12 hours</td>
+<td>Turnaround time</td>
+</tr>
+</tbody>
+</table>
+<p>(Each day contains 24 × 4 = 96 expected intervals)</p>
+</section>
+<section id="d.-functional-requirements" class="level3">
+<h3 class="anchored" data-anchor-id="d.-functional-requirements">[D]. Functional Requirements</h3>
+<ul>
+<li><p><strong>Medallion Layer Implementation</strong></p>
+<ul>
+<li><p><strong><em>Bronze</em></strong>: Raw CSV data are ingested using Apache Spark (append-only) + metadata (ingestion timestamp, batch identifiers, etc.)</p></li>
+<li><p><strong><em>Silver</em></strong>: Schema standardization (parsing timestamp, normalizing event types, applying conditional column rules, etc.)</p>
+<ul>
+<li><strong>validation rules</strong>:
+<ul>
+<li><code>active_power_min</code> ≤ <code>active_power_mean</code> ≤ <code>active_power_max</code></li>
+<li><code>data_count</code> ≤ 15</li>
+<li>timestamp continuity check.</li>
+</ul></li>
+</ul></li>
+<li><p><strong><em>Gold</em></strong>: Curating data marts designed for analytical use</p>
+<ul>
+<li>Data Mart for “Load Ratio Analysis”</li>
+<li>Monitoring Table I. (daily KPI)
+<ul>
+<li><div class="line-block">NO.valid intervals | NO.empty intervals | NO.partial intervals | NO.aligned intervals | completeness rate |</div></li>
+</ul></li>
+<li>Monitoring Table II. (daily issue-type summary)
+<ul>
+<li><div class="line-block">issue type | issue count | first issue ts | last issue ts |</div></li>
+</ul></li>
+<li>Analytical Table
+<ul>
+<li><div class="line-block">signal_id | signal_date | quarter_hour_slot | DataCNT | AVGsig | MINsig | MAXsig |</div></li>
+</ul></li>
+<li>Derived Indicators
+<ul>
+<li>daily peak load</li>
+<li>load variability metrics</li>
+<li>power fluctuation statistics</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p><strong>Orchestration (Airflow)</strong></p>
+<ul>
+<li>Airflow orchestrates the transformation workflow within the Medallion architecture.
+<ul>
+<li>Schedule execution ⇒ Ingestion using Spark ⇒ dbt run(Silver/Gold) ⇒ dbt test ⇒ slack<br>
+</li>
+<li>In case of failure in any transformation or validation, the workflow automatically retries tasks and provides log links for troubleshooting.</li>
+<li>Data Quality Monitoring (dbt test)
+<ul>
+<li>not_null, unique, accepted_values, relationships</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p><strong>Alerting (Slack)</strong></p>
+<ul>
+<li>Airflow ensures that each transformation stage is executed sequentially and that downstream tasks are only triggered when upstream validation checks succeed.
+<ul>
+<li>If DQ-tests fail, automated alerts are sent via Slack notifications.</li>
+<li>The alerts include information (batch ID, affected tables, causes of the issue, etc.)</li>
+<li>Rapid detection and resolution of data quality issues within the pipeline.</li>
+</ul></li>
+</ul></li>
+<li><p><strong>Scheduling</strong></p>
+<ul>
+<li>The transformation workflow is scheduled to execute on a daily basis to ensure that analytical datasets in the Gold layer remain consistent with the latest available operational measurements. Failure handling mechanisms include:
+<ul>
+<li>automatic retry attempts</li>
+<li>task dependency validation</li>
+<li>alert notifications to system operators.</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="e.-non-functional-requirements" class="level3">
+<h3 class="anchored" data-anchor-id="e.-non-functional-requirements">[E]. Non-functional Requirements</h3>
+<ul>
+<li><strong>SLA</strong> (service level agreement)
+<ul>
+<li>Monitoring and reporting must be available daily.</li>
+<li>Gold Mart tables must be published before 7 am. with the data derived from the previous day’s records.</li>
+<li>If dbt tests fail, the publication of Gold tables is blocked as a gatekeeping mechanism.</li>
+</ul></li>
+<li><strong>Performance &amp; Cost</strong>
+<ul>
+<li>Daily pipeline execution should complete within 30 minutes.</li>
+<li>Query costs are managed by using Google Cloud BigQuery table partitioning based on the <code>event_date</code> field.</li>
+</ul></li>
+<li><strong>Safety</strong>
+<ul>
+<li>Access to Bronze layer raw data should be restricted to authorized users.</li>
+</ul></li>
+</ul>
+</section>
+<section id="f.-data-quality-validation-rules" class="level3">
+<h3 class="anchored" data-anchor-id="f.-data-quality-validation-rules">[F]. Data Quality Validation Rules</h3>
+<p>Given that SCADA-based operational datasets are prone to measurement and communication errors, a structured set of data quality rules is implemented in the Silver layer to ensure reliability before the data are exposed for analytical use. The validation rules focus on four main dimensions: - Completeness, Validity, Consistency, Timeliness</p>
+<ul>
+<li>Data Quality Test Example</li>
 </ul>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 3%">
-<col style="width: 28%">
-<col style="width: 15%">
-<col style="width: 53%">
+<col style="width: 4%">
+<col style="width: 25%">
+<col style="width: 20%">
+<col style="width: 25%">
+<col style="width: 23%">
 </colgroup>
 <thead>
 <tr class="header">
 <th>ID</th>
-<th>Feature</th>
-<th>Test Type</th>
+<th>Table</th>
+<th>Column</th>
+<th>Test type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>T01</td>
-<td><code>RUL</code> accuracy</td>
-<td>Regression test</td>
-<td>Compare model output vs.&nbsp;true RUL on historical data</td>
+<td>bronze.raw</td>
+<td>timestamp</td>
+<td>unique</td>
+<td>duplicate check</td>
 </tr>
 <tr class="even">
 <td>T02</td>
-<td>Feature completeness</td>
-<td>Not Null</td>
-<td>Ensure no nulls in casting parameter inputs</td>
+<td>silver.power_Trf</td>
+<td>active_power</td>
+<td>not_null &amp; valid</td>
+<td>accepted values</td>
 </tr>
 <tr class="odd">
 <td>T03</td>
-<td>Resistance validity</td>
-<td>Range check</td>
-<td>Ensure resistance is within known tonnage range</td>
+<td>silver.power_Trf</td>
+<td>data_count</td>
+<td>not_null &amp; valid</td>
+<td>accepted values</td>
 </tr>
 <tr class="even">
 <td>T04</td>
-<td>Alert precision</td>
-<td>SLA test</td>
-<td>Alert only when RUL &lt; threshold with high accuracy</td>
+<td>silver.power_Trf</td>
+<td>active_power</td>
+<td>freshness</td>
+<td>update check</td>
 </tr>
 <tr class="odd">
 <td>T05</td>
-<td>Casting temperature validity</td>
-<td>Value domain</td>
-<td>Validate <code>steel_temperature</code> is within 1400–1600°C</td>
+<td>gold.monitoring</td>
+<td>data_count</td>
+<td>completeness</td>
+<td>threshold check</td>
+</tr>
+<tr class="even">
+<td>T06</td>
+<td>gold.monitoring</td>
+<td>load_ratio</td>
+<td>not_null &amp; valid</td>
+<td>accepted values</td>
+</tr>
+<tr class="odd">
+<td>T07</td>
+<td>gold.monitoring</td>
+<td>load_ratio</td>
+<td>freshness</td>
+<td>SLA validation</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>Data quality monitoring is implemented through automated validation checks executed during pipeline execution.</p></li>
+<li><p>If any rule fails:</p>
+<ul>
+<li>the affected dataset is flagged</li>
+<li>alerts are generated</li>
+<li>Gold dataset publication may be temporarily blocked.</li>
+</ul></li>
+</ul>
+</section>
+<section id="g.-system-architecture" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="g.-system-architecture">[G]. System Architecture</h3>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/architecture.png" class="img-fluid figure-img" width="600"></p>
+<figcaption class="margin-caption">Figure 03. ETL data pipeline architecture for substation monitoring simulation. The architecture integrates streaming ingestion (Kafka and Spark), cloud-based landing storage (GCS), Medallion data modeling in BigQuery (Bronze-Silver-Gold), orchestration via Apache Airflow, and automatic visualization and alerting through Looker Studio and Slack.</figcaption>
+</figure>
+</div>
+</section>
+<section id="h.-stakeholders-and-roles" class="level3">
+<h3 class="anchored" data-anchor-id="h.-stakeholders-and-roles">[H]. Stakeholders and Roles</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Role</th>
+<th>In charge</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Data Product Owner</td>
+<td>David Lindburg</td>
+<td>Define objectives</td>
+</tr>
+<tr class="even">
+<td>Data Engineer</td>
+<td>Thomas Ward</td>
+<td>Implement pipeline</td>
+</tr>
+<tr class="odd">
+<td>Analyst</td>
+<td>Martin Müller</td>
+<td>Use for analysis</td>
+</tr>
+<tr class="even">
+<td>Operations Team</td>
+<td>Ashley Johnson</td>
+<td>Respond to alerts/failures</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="data-acquisition" class="level2">
-<h2 class="anchored" data-anchor-id="data-acquisition">Data Acquisition</h2>
-<p>In the course of CCM operation, the automatic control system that runs the process of casting ingots creates a database of casting parameters. The collected parameters are averaged data for all the strands in each cast; the only thing that differs is the resistance of the sleeve for each strand. After removing the mould sleeve for inspection, the initial data on the process parameters of casting, the geometry of obtained ingots and other attributes can be uploaded from the SCADA. The data were collected from a real production facility but after that they were processed, cleared, aggregated and prepared to solve the RUL problem.</p>
+<section id="i.-reporting-and-communication" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="i.-reporting-and-communication">[I]. Reporting and Communication</h3>
+<ul>
+<li><strong>Slack Alerts include:</strong>
+<ul>
+<li>pipeline failure notification</li>
+<li>data quality test failure</li>
+<li>SLA violations</li>
+</ul></li>
+<li>Example of a Slack notification generated by the pipeline:</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>rotating_light:</strong> Data Freshness SLA Violation</p>
+<p><strong>Dataset:</strong> Calendar Availability <strong>Batch ID:</strong> 2026-03-07-01 <strong>Affected Table:</strong> gold_calendar_availability</p>
+<p><strong>Issue:</strong> 3% of listings have not updated their calendars for more than 24 hours.</p>
+<p><strong>Impact:</strong> City-level availability metrics may be incomplete.</p>
+<p><strong>Suggested Action:</strong> Check upstream ingestion jobs and API synchronization logs.</p>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/medal07.png" class="img-fluid figure-img" width="800"></p>
+<figcaption class="margin-caption">Figure 03. Slack Notification.</figcaption>
+</figure>
+</div>
+<ul>
+<li><strong>Daily Monitoring Report includes:</strong>
+<ul>
+<li>pipeline execution status</li>
+<li>dataset freshness</li>
+<li>data quality test results</li>
+<li>detected anomalies.</li>
+</ul></li>
+</ul>
 </section>
-<section id="data-management-with-medallion-architecture" class="level2">
-<h2 class="anchored" data-anchor-id="data-management-with-medallion-architecture">Data Management with Medallion Architecture</h2>
-<p>The following dataset represents a Silver-layer operational view within a <strong><em>medallion architecture</em></strong> - Bronze, Silver, Gold - for a continuous casting process investigation. Raw sensor streams and process logs are first ingested into the <em>Bronze layer</em> as immutable records. These raw signals are then cleaned, standardized, time-aligned, and enriched with production metadata, cooling parameters, chemical composition, and equipment identifiers to form this <em>Silver dataset</em>.</p>
-<p>Each row corresponds to a casting event or production segment, and the Remaining Useful Life (RUL) variable serves as the analytical target. By structuring the data at the <em>Silver layer</em>, we enable reliable linkage between production characteristics: <code>production info</code>, process parameters: <code>casting process parameters</code>, cooling &amp; crystallizer behavior: <code>Water Consumption</code>, <code>residue info</code>, chemical composition of steel: <code>material properties</code>, <code>chemical composition</code>, operational identifiers: <code>time identification</code>, <code>equipment context</code>, and target variable: <code>RUL</code>, which can then be aggregated or modeled in the Gold layer to produce RUL predictions and maintenance KPIs. <strong>This layered design ensures data quality and auditability</strong> while supporting predictive maintenance analytics.</p>
+<section id="j.-continuous-improvement" class="level3">
+<h3 class="anchored" data-anchor-id="j.-continuous-improvement">[J]. Continuous Improvement</h3>
+<ul>
+<li>The pipeline will be continuously improved through:
+<ul>
+<li>periodic data quality &amp; SLA compliance review.</li>
+<li>A built-in review process ensures that data quality rules are validated whenever new tables are added.</li>
+<li>Adjustment of validation rules.</li>
+<li>Feedback-driven rule improvement: reducing false positives and improving alert precision</li>
+<li>Enhancement of monitoring dashboards.</li>
+<li>Optimization of pipeline performance.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="implementation" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="implementation">Implementation+++++++++++++++++++++++++++++</h2>
+<section id="a.-setup" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="a.-setup">[A]. Setup</h3>
+<section id="open-with-wls" class="level4">
+<h4 class="anchored" data-anchor-id="open-with-wls">(1) Open with WLS</h4>
+<p>Assuming that <code>WSL.Ubuntu-22.04</code> is used on a local machine running Windows 11, the terminal in VS Code is first opened to prepare remote access to Google Cloud Platform. For SSH-based access, a public-private key pair must be generated using the following command:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>minkun@Benny:~$ ssh-keygen -t rsa -b 4096 -f ~/.ssh/gcp_vm</p>
+</div>
+</div>
+<p>Note that the <strong>public key</strong> must later be uploaded to GCP for SSH authentication.</p>
+<p>In the directory <code>/home/minkun/.ssh</code>, the generated key pair appears as <strong>gcp_vm</strong> and <strong>gcp_vm.pub</strong>, where the former denotes the private key and the latter the public key. Bear in mind that the same directory will also later include an SSH <code>config</code> file, which enables VS Code to connect to the GCP virtual machine remotely. After the <strong>external IP address</strong> of the GCP instance is assigned, it should be recorded in this <code>config</code> file together with the corresponding SSH connection parameters.</p>
+</section>
+<section id="go-to-gcp" class="level4">
+<h4 class="anchored" data-anchor-id="go-to-gcp">(2) Go to GCP</h4>
+<p>In GCP, what comes first is to create VM instance (compute engine). Assuming the following specification:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>E2 standard 4 (4CPU + 16GB memory)</li>
+<li>Ubuntu 24.04 LTS Minimal with boot disk size: 100GB</li>
+</ul>
+</div>
+</div>
+<p>Next, access the VM instance and open the <strong>SSH terminal</strong> for the initial setup. We then install the necessary commands and software packages (we use docker) that are needed for the project but are not installed by default on the GCP virtual machine.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>minkun_kim4@instance-20260311-173303:~$ sudo apt update -y<br>
+minkun_kim4@instance-20260311-173303:~$ sudo apt install -y git curl unzip<br>
+minkun_kim4@instance-20260311-173303:~$ sudo apt install -y ca-certificates gnupg minkun_kim4@instance-20260311-173303:~$ curl -fsSL https://get.docker.com/ | sudo sh<br>
+minkun_kim4@instance-20260311-173303:~$ sudo usermod -aG docker $USER</p>
+<p>minkun_kim4@instance-20260311-173303:~$ newgrp docker</p>
+<p>minkun_kim4@instance-20260311-173303:~$ docker –version<br>
+minkun_kim4@instance-20260311-173303:~$ docker compose version</p>
+</div>
+</div>
+<p>We also need to set the firewall for our VM instance. For this, we need our IP address. Go fetch your IP address from: https://whatismyipaddress.com/</p>
+<p>Again, access our VM instance, go and find “Network interface”, and click “network detail”, and go to the firewall on the left. Paste your IP address as well as set the port number on TCP.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Airflow: 8085</li>
+<li>Spark: 8081</li>
+<li>Kafka: 8080</li>
+<li>Dbt: 7999</li>
+</ul>
+</div>
+</div>
+<p>After completing the initial setup, locate the IP address section in the left sidebar of the GCP interface. There, promote the assigned <strong>external IP address</strong> to a <strong>static IP address</strong> and provide a name for it, for example “mk-gcp-instance-ip”. The resulting external IP address should be kept safe, as it will later be added to the SSH <code>config</code> file for remote access through VS Code.</p>
+<p>Register the <strong>public key</strong> generated earlier for SSH access to the GCP virtual machine. To do this, open the VM instance settings again, click Edit, scroll down to the SSH Keys section, and select Add item. Then paste the contents of the public key file into the field and save the changes.—–THE END</p>
+</section>
+<section id="go-back-to-your-device" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="go-back-to-your-device">(3) Go back to your device</h4>
+<p>Finally, we build a SSH <code>config</code> file to register host.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Host gcp-de-vm</p>
+<pre><code>- HostName 34.40.116.42 (new external ip)
+- User minkun
+- IdentityFile ~/.ssh/gcp_vm
+- IdentitiesOnly yes</code></pre>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/configggg.png" class="img-fluid figure-img" width="600"></p>
+<figcaption class="margin-caption">Figure 04. See where does the config file locate.</figcaption>
+</figure>
+</div>
+<p>Since you are a windows user, GO and find <code>C:\Users\kimmk\.ssh</code> (windows path) in your laptop, make sure you locate the correct config file too!</p>
+<p>Now, using this config file, we can access GCP remotely: from <code>WLS: Ubuntu-22.04</code> via (remote tunnel) to <code>SSH: gcp-de-vm</code>. Hooooray! Next, in your remote VM environment, create folders and everything:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>minkun@instance-20260311-173303: ~$ mkdir -p 00-network 10-kafka 20-spark 30-airflow 40-dbt 50-apps/data 50-apps/replayer secrets scripts docs</p>
+</div>
+</div>
+<p>Plus, add your csv dataset.</p>
+</section>
+</section>
+<section id="b.-from-docker-to-bronze-medallion" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="b.-from-docker-to-bronze-medallion">[B]. From Docker to Bronze Medallion</h3>
+<section id="set-docker-afloat" class="level4">
+<h4 class="anchored" data-anchor-id="set-docker-afloat">(1) Set Docker afloat</h4>
+<p>Let us now activate Docker and Docker Compose. For this, the required files are first organized in their respective project directories.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For <strong>kafka-10</strong> - <code>docker-compose.yml</code></p>
+<p>For <strong>spark-20</strong> - <code>docker-compose.yml</code> - <code>Dockerfile</code></p>
+<p>For <strong>airflow-30</strong> - <code>docker-compose.yml</code> - <code>.env</code></p>
+<p>For <strong>airflow-30&gt;.dbt</strong> - <code>profiles.yml</code></p>
+<p>For <strong>airflow-30&gt;dags</strong> - <code>dbt_signal_layered.py</code></p>
+<p>For <strong>dbt-40</strong> - <code>docker-compose.yml</code> - <code>Dockerfile</code></p>
+<p>For <strong>dbt-40&gt;.dbt</strong> - <code>profiles.yml</code></p>
+<p>For <strong>dbt-40&gt;my_dbt_project</strong> - <code>dbt_project.yml</code> - <code>packages.yml</code></p>
+<p>For <strong>dbt-40&gt;my_dbt_project&gt;models&gt;bronze</strong> - <code>brz_signal.sql</code></p>
+<p>For <strong>dbt-40&gt;my_dbt_project&gt;models&gt;silver</strong> - <code>slv_signal.sql</code> - <code>silver.yml</code></p>
+<p>For <strong>dbt-40&gt;my_dbt_project&gt;models&gt;gold</strong> - <code>fct_signal_clean_15min.sql</code> - <code>fct_signal_issue_daily.sql</code> - <code>fct_signal_quality_daily.sql</code> - <code>gold.yml</code></p>
+<p>For <strong>apps-50&gt;data</strong> - <code>your_data.csv</code></p>
+<p>For <strong>apps-50&gt;replayer</strong> - <code>Dockerfile</code> - <code>replay.py</code> - <code>requirement.txt</code></p>
+<p>For <strong>apps-50&gt;spark</strong> - <code>consume_kafka.py</code></p>
+<p>For <strong>secrets</strong> - <code>wired-effort-483112-k2-59425ba2002c.json</code></p>
+</div>
+</div>
+<p>Note that to circumvent “permission denied” issue, do not forget to authorization..for example:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>minkun@instance-20260311-173303:~$ sudo usermod -aG docker $USER<br>
+# adds the current user to the docker group…to run Docker without typing sudo every time</p>
+<p>minkun@instance-20260311-173303:~$ sudo chmod -R 777 30-airflow # makes the “30-airflow” folder fully accessible to everyone…but not good practice for security</p>
+<p>minkun@instance-20260311-173303:~$ sudo chown -R minkun:minkun /home/minkun/<br>
+# ensures files in that directory belong to user minkun</p>
+</div>
+</div>
+<p>Now establish connections between docker containers!</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>minkun@instance-20260311-173303:~$ sudo usermod -aG docker $USER</p>
+<p>minkun@instance-20260311-173303:~$ newgrp docker</p>
+<p>minkun@instance-20260311-173303:~$ docker ps</p>
+<p>minkun@instance-20260311-173303:~$ docker network create de_net</p>
+</div>
+</div>
+<p>Then start docker containers</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>minkun@instance-20260311-173303:~/10-kafka$ docker compose build</p>
+<p>minkun@instance-20260311-173303:~/10-kafka$ docker compose down</p>
+<p>minkun@instance-20260311-173303:~/10-kafka$ <code>docker compose up -d</code></p>
+<p>minkun@instance-20260311-173303:~/20-spark$ docker compose build</p>
+<p>minkun@instance-20260311-173303:~/20-spark$ docker compose down</p>
+<p>minkun@instance-20260311-173303:~/20-spark$ <code>docker compose up -d</code></p>
+<p>minkun@instance-20260311-173303:~$ mkdir -p 30-airflow/{dags,logs,plugins,config}</p>
+<p>minkun@instance-20260311-173303:~/30-airflow$ docker compose up -d airflow-init</p>
+<p>minkun@instance-20260311-173303:~/30-airflow$ <code>docker compose up -d</code></p>
+<p>minkun@instance-20260311-173303:~/30-airflow$ <code>docker ps --format "{{.Names}}" | grep '^30-airflow-' | while read name;</code> <code>do new_name=$(echo "$name" | sed 's/^30-airflow-//');</code> <code>docker rename "$name" "$new_name"; done</code></p>
+<p>minkun@instance-20260311-173303:~/40-dbt$ docker compose build</p>
+<p>minkun@instance-20260311-173303:~/40-dbt$ docker compose down</p>
+<p>minkun@instance-20260311-173303:~/40-dbt$ <code>docker compose up -d</code></p>
+<p>minkun@instance-20260311-173303:~/40-dbt$ <code>docker exec -it dbt-core bash</code> ##…DO NOT OVERWRITE</p>
+<p>root@007ded5fb3b7:/usr/app# dbt init my_dbt_project</p>
+<p>root@007ded5fb3b7:/usr/app/my_dbt_project# dbt debug</p>
+<p>root@007ded5fb3b7:/usr/app/my_dbt_project# dbt docs generate</p>
+<p>root@007ded5fb3b7:/usr/app/my_dbt_project# <code>dbt docs serve --host 0.0.0.0 --port 7999</code></p>
+<p>root@007ded5fb3b7:/usr/app/my_dbt_project# <code>nohup dbt docs serve --host 0.0.0.0 -port 7999 &gt; docs.log 2&gt;&amp;1 &amp;</code></p>
+</div>
+</div>
+<p>Then, files, folders, etc. are created automatically, and we can open the web consoles:</p>
+<ul>
+<li>For kafka :::::: http://34.40.116.42:8080</li>
+<li>For spark :::::: http://34.40.116.42:8081</li>
+<li>For airflow :::::: http://34.40.116.42:8085</li>
+<li>For dbt :::::: http://34.40.116.42:7999</li>
+</ul>
+</section>
+<section id="ingestion-replayer-sends-events-to-kafka-in-a-loop-and-kafka-sends-to-spark" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="ingestion-replayer-sends-events-to-kafka-in-a-loop-and-kafka-sends-to-spark">(2) Ingestion (replayer sends events to Kafka in a loop, and Kafka sends to Spark )</h4>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>minkun@instance-20260311-173303:~/50-apps/replayer$ docker build -t kafka-replayer .</p>
+<p>minkun@instance-20260311-173303:~/50-apps/replayer$<br>
+<code>docker run --rm --network de_net -v $(pwd)/../data:/data kafka-replayer</code></p>
+</div>
+</div>
+<p>Next, let us consume the kafka message, using spark to store data points in a “parquet” format into GCS. For this, Go to GCP and create a bucket. Find “IAM” section, and find the “service accounts” on the left panel. Name “service-account-mk”, and choose the permission as “editor”. Access the “service-account-mk”, move to the “key” tab to fetch the new JSON key and put it in the “secrets” folder in your machine.</p>
+<p>Now, submit spark job, using <code>consume_kafka.py</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>minkun@instance-20260311-173303:~/20-spark$<br>
+<code>docker compose exec spark /opt/spark/bin/spark-submit \ --master local[*] \ --packages</code> <code>org.apache.spark:spark-sql-kafka-0</code> <code>10_2.12:3.5.1,com.google.cloud.bigdataoss:gcs-connector:hadoop3-2.2.19 \</code> <code>/opt/spark/work-dir/consume_kafka.py</code></p>
+</div>
+</div>
+<p><code>consume_kafka.py</code>:</p>
+<div id="79a0537d" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">####################################################################</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># reads Kafka continuously</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># writes to GCS as Parquet</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># adds partition columns by processing time</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># stays alive and prints a useful error if the stream fails</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">####################################################################</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> current_timestamp, date_format, col</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Basic config</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>APP_NAME <span class="op">=</span> <span class="st">"kafka-consumer"</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>BOOTSTRAP <span class="op">=</span> <span class="st">"kafka:9092"</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>TOPIC <span class="op">=</span> <span class="st">"signal_events"</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>GROUP_ID <span class="op">=</span> <span class="st">"spark_signal_consumer"</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>GCS_PATH <span class="op">=</span> <span class="st">"gs://test-kafka-mk/digiONS/raw"</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>GCS_CHECKPOINT <span class="op">=</span> <span class="st">"gs://test-kafka-mk/checkpoints/digiONS"</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>GCP_KEYFILE <span class="op">=</span> <span class="st">"/opt/spark/secrets/wired-effort-483112-k2-59425ba2002c.json"</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. SparkSession</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> (</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    SparkSession.builder</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    .appName(APP_NAME)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    .config(<span class="st">"spark.hadoop.fs.gs.impl"</span>, <span class="st">"com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem"</span>)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    .config(<span class="st">"spark.hadoop.fs.AbstractFileSystem.gs.impl"</span>, <span class="st">"com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS"</span>)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    .config(<span class="st">"spark.hadoop.google.cloud.auth.service.account.enable"</span>, <span class="st">"true"</span>)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    .config(<span class="st">"spark.hadoop.google.cloud.auth.service.account.json.keyfile"</span>, GCP_KEYFILE)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    .getOrCreate()</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>spark.sparkContext.setLogLevel(<span class="st">"INFO"</span>)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Spark session created"</span>)</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"App name:"</span>, APP_NAME)</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Kafka bootstrap:"</span>, BOOTSTRAP)</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Kafka topic:"</span>, TOPIC)</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"GCS path:"</span>, GCS_PATH)</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Checkpoint path:"</span>, GCS_CHECKPOINT)</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Read Kafka stream</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>raw_df <span class="op">=</span> (</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    spark.readStream</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">format</span>(<span class="st">"kafka"</span>)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    .option(<span class="st">"kafka.bootstrap.servers"</span>, BOOTSTRAP)</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    .option(<span class="st">"subscribe"</span>, TOPIC)</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    .option(<span class="st">"startingOffsets"</span>, <span class="st">"earliest"</span>)</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    .option(<span class="st">"kafka.group.id"</span>, GROUP_ID)</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    .option(<span class="st">"failOnDataLoss"</span>, <span class="st">"false"</span>)</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>    .load()</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep useful Kafka metadata too</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>value_df <span class="op">=</span> raw_df.selectExpr(</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CAST(key AS STRING) AS kafka_key"</span>,</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CAST(value AS STRING) AS value"</span>,</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>    <span class="st">"topic"</span>,</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>    <span class="st">"partition"</span>,</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>    <span class="st">"offset"</span>,</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>    <span class="st">"timestamp AS kafka_timestamp"</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------</span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Add processing-time partitions</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------</span></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>with_ts <span class="op">=</span> (</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>    value_df</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>    .withColumn(<span class="st">"proc_ts"</span>, current_timestamp())</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>    .withColumn(<span class="st">"event_date"</span>, date_format(col(<span class="st">"proc_ts"</span>), <span class="st">"yyyy-MM-dd"</span>))</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>    .withColumn(<span class="st">"event_hour"</span>, date_format(col(<span class="st">"proc_ts"</span>), <span class="st">"HH"</span>))</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>    .withColumn(<span class="st">"event_minute"</span>, date_format(col(<span class="st">"proc_ts"</span>), <span class="st">"mm"</span>))</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------</span></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Write stream to GCS</span></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------</span></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> (</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>    with_ts.writeStream</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">format</span>(<span class="st">"parquet"</span>)</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>    .option(<span class="st">"path"</span>, GCS_PATH)</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>    .option(<span class="st">"checkpointLocation"</span>, GCS_CHECKPOINT)</span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>    .outputMode(<span class="st">"append"</span>)</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>    .partitionBy(<span class="st">"event_date"</span>, <span class="st">"event_hour"</span>, <span class="st">"event_minute"</span>)</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>    .queryName(<span class="st">"signals_to_gcs_partitioned"</span>)</span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>    .start()</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Streaming query started"</span>)</span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Query name:"</span>, query.name)</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Query id:"</span>, query.<span class="bu">id</span>)</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Query runId:"</span>, query.runId)</span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------</span></span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Keep alive and show status</span></span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------</span></span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> query.isActive:</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"----- stream status -----"</span>)</span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(query.status)</span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> query.lastProgress <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">"Last progress:"</span>, query.lastProgress)</span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">"Last progress: None yet"</span>)</span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>        time.sleep(<span class="dv">10</span>)</span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If stream becomes inactive unexpectedly, surface the reason</span></span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> query.exception() <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">Exception</span>(query.exception())</span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">KeyboardInterrupt</span>:</span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Stopping stream by user request..."</span>)</span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>    query.stop()</span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"STREAM FAILED"</span>)</span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="bu">str</span>(e))</span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span></span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a><span class="cf">finally</span>:</span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Shutting down Spark session..."</span>)</span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a>    spark.stop()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/GCS_datalake.png" class="img-fluid figure-img" width="600"></p>
+<figcaption class="margin-caption">Figure 05. Google cloude storage bucket as a datalake.</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="c.-from-bronze-to-silver-medallion" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="c.-from-bronze-to-silver-medallion">[C]. From Bronze to Silver Medallion</h3>
+<section id="pick-up-your-bronze-layer-by-creating-bigquery-external-table" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="pick-up-your-bronze-layer-by-creating-bigquery-external-table">(1) Pick up your Bronze layer by creating BigQuery External Table</h4>
+<p>Let us identify the target GCS bucket first and the folder path that contains the Parquet files. Since Parquet is a self-describing format, BigQuery can infer the schema directly from the files, so an explicit schema definition is not strictly required.</p>
+<p>A table definition file can then be created with the <code>bq mkdef</code> command, and that definition is used to create the external table with <code>bq mk</code>. In this way, the raw data remain physically stored in GCS, while BigQuery provides SQL access to them as an external table.</p>
+<p>Go to the GCP and “activate the cloud shell”, and pick up the GCS bucket:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>minkun_kim4@cloudshell:~ (wired-effort-483112-k2)$</p>
+<p>bq mkdef –source_format=PARQUET –hive_partitioning_mode=AUTO – hive_partitioning_source_uri_prefix=gs://test-kafka-mk/digiONS/raw/ gs://test-kafka mk/digiONS/raw/event_date=* &gt; digiONSsignal_ext.def</p>
+</div>
+</div>
+<p>And.. we create new dataset and table:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>minkun_kim4@cloudshell:~ (wired-effort-483112-k2)$ bq mk –dataset wired-effort-483112-k2:test</p>
+<p>minkun_kim4@cloudshell:~ (wired-effort-483112-k2)$ bq mk –external_table_definition=digiONSsignal_ext.def wired-effort-483112-k2:test.digiONSsignal_ext</p>
+</div>
+</div>
+<p>Now, we can see the <code>schema-on-read</code> table!</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/medal03.png" class="img-fluid figure-img" width="800"></p>
+<figcaption class="margin-caption">Figure 06. BigQuery External Table displayed via real-time query<br>
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="silver-layer-and-silver-validation-test" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="silver-layer-and-silver-validation-test">(2) Silver layer and Silver validation test</h4>
+<p>From Silver, we need to parse this JSON, and give structure.</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/parse.png" class="img-fluid figure-img" width="800"></p>
+<figcaption class="margin-caption">Figure 07. Parsing example<br>
+</figcaption>
+</figure>
+</div>
+<p>Go back to VS Code, construct the Silver layer and perform the Silver test:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>minkun@instance-20260311-173303:~/40-dbt$ docker exec -it dbt-core bash</p>
+<p>root@007ded5fb3b7:/usr/app/my_dbt_project# dbt debug</p>
+<p>root@007ded5fb3b7:/usr/app/my_dbt_project# dbt dep</p>
+<p>root@007ded5fb3b7:/usr/app/my_dbt_project# dbt build</p>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/build.png" class="img-fluid figure-img" width="600"></p>
+<figcaption class="margin-caption">Figure 08. dbt in action! Creating and testing the Silver layer.</figcaption>
+</figure>
+</div>
+<p>During the execution, the eight data quality tests are subsequently performed on the standardized dataset. The data points that violate one or more of these tests are consolidated into a summary table, which is materialized and made available for inspection in the GCP BigQuery console.</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/fail_table.png" class="img-fluid figure-img" width="800"></p>
+<figcaption class="margin-caption">Figure 09. Resulting tables of 8 DQ-tests. In the left-side panel, one can see that the Silver layer can be seen as successfully constructed.</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="d.-from-silver-to-gold-medallion" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="d.-from-silver-to-gold-medallion">[D]. From Silver to Gold Medallion</h3>
+<section id="three-data-marts" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="three-data-marts">(1) Three Data Marts</h4>
+<p>In the Gold layer, the validated measurements (data points) from the Silver layer are aggregated and transformed into analysis-ready tables that can be queried directly without additional preprocessing. To implement this layer, three SQL models - <code>fct_signal_clean_15min.sql</code>, <code>fct_signal_issue_daily.sql</code>, <code>fct_signal_quality_daily.sql</code>, and one YAML file - <code>gold.yml</code> are created and placed in the <strong>gold</strong> folder under the <strong>models</strong> directory of the <strong>my_dbt_project</strong>.</p>
+<ul>
+<li><p><strong>fct_signal_quality_daily</strong> is a daily KPI monitoring table. It summarizes 15 minute signal intervals at the daily level. Under normal conditions, each day contains <span class="math inline">\(24 × 4 = 96\)</span> expected intervals. The table reports how many of these intervals are valid, empty, partial, and correctly aligned each day, thereby serving as a daily data quality monitoring dashboard. This allows the KPI related to timestamp alignment to be identified quickly on a daily basis. By showing whether 15-minute intervals are recorded at the correct quarter-hour timestamps, it provides a daily indication of whether DigiONS is functioning properly in terms of timestamp alignment.</p></li>
+<li><p><strong>fct_signal_issue_daily</strong> is a daily issue-type summary monitoring table. It summarizes row-level signal-quality issues by day. The issue includes (1) Incomplete 15-minute Window, (2) Missing Minute-level Signals, (3) Delayed Ingestion, (4) Other Collection Problem. For a substation monitoring context, this helps quickly see whether the problem is occasional or persistent, whether it clusters in certain days or periods, how long the problematic window lasted each day, etc.</p></li>
+<li><p><strong>fct_signal_clean_15min</strong> is the clean analytical table for daily use. This table is not intended for monitoring; instead, it stores one trusted 15-minute substation interval per row after incomplete, null, misaligned, and internally inconsistent records have been removed. It is therefore suited to downstream analyses such as load-curve plotting, comparison of substation behavior over time, and other applications requiring reliable interval data. Accordingly, it preserves the original structure of the Power Exchange dataset while retaining only trusted records.</p></li>
+</ul>
+<p>To creat these data mart tables, use the following:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>root@5231af4ae491:/usr/app/my_dbt_project# <code>dbt run --select</code> <code>+ fct_signal_quality_daily +</code> <code>fct_signal_issue_daily + fct_signal_clean_15min</code></p>
+<p>root@5231af4ae491:/usr/app/my_dbt_project# <code>dbt build</code></p>
+</div>
+</div>
+<p>The resulting tables are shown in Figure 10.</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/medal05.png" class="img-fluid figure-img" width="800"></p>
+<figcaption class="margin-caption">Figure 10. Resulting three tables of the Gold layer.</figcaption>
+</figure>
+</div>
+</section>
+<section id="automating-the-medallion-pipeline" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="automating-the-medallion-pipeline">(2) Automating the Medallion pipeline</h4>
+<p>Now, we automate this pipeline across Bronze-Silver-Gold. Before we start, note the following:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For <strong>airflow-30&gt;.dbt</strong> - <code>profiles.yml</code> - <code>.user.yml</code></p>
+<p>For <strong>dbt-40&gt;.dbt</strong> - <code>profiles.yml</code> - <code>.user.yml</code></p>
+</div>
+</div>
+<p>Both folders contain YAML files with the same name. The former is used for automatic execution through Airflow, whereas the latter is intended for the manual execution workflow described so far. The following Figure 11. shows the different configurations of these two YAML files, despite sharing the same filename.</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/profile.png" class="img-fluid figure-img" width="800"></p>
+<figcaption class="margin-caption">Figure 11. YAML files for automatic and manual execution of the pipeline.</figcaption>
+</figure>
+</div>
+<p>The following is our DAG files - <code>dbt_signal_layered.py</code> - to automate the pipeline execution.</p>
+<div id="2b28f981" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> subprocess</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pendulum</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> airflow.sdk <span class="im">import</span> dag, task</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> airflow.operators.empty <span class="im">import</span> EmptyOperator</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> airflow.providers.slack.notifications.slack_webhook <span class="im">import</span> send_slack_webhook_notification</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>GERMANY_TZ <span class="op">=</span> pendulum.timezone(<span class="st">"Europe/Berlin"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>slack_fail_alert <span class="op">=</span> send_slack_webhook_notification(</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    slack_webhook_conn_id<span class="op">=</span><span class="st">"slack_webhook"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    text<span class="op">=</span>(</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">":red_circle: Airflow DAG failed.</span><span class="ch">\n</span><span class="st">"</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"*DAG*: </span><span class="sc">{{</span><span class="st"> dag.dag_id </span><span class="sc">}}</span><span class="ch">\n</span><span class="st">"</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"*Task*: </span><span class="sc">{{</span><span class="st"> ti.task_id </span><span class="sc">}}</span><span class="ch">\n</span><span class="st">"</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"*Run ID*: </span><span class="sc">{{</span><span class="st"> run_id </span><span class="sc">}}</span><span class="ch">\n</span><span class="st">"</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"*Logical Date*: </span><span class="sc">{{</span><span class="st"> ds </span><span class="sc">}}</span><span class="ch">\n</span><span class="st">"</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">"*Log URL*: </span><span class="sc">{{</span><span class="st"> ti.log_url </span><span class="sc">}}</span><span class="st">"</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="at">@dag</span>(</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    dag_id<span class="op">=</span><span class="st">"dbt_signal_layered"</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    start_date<span class="op">=</span>datetime(<span class="dv">2026</span>, <span class="dv">3</span>, <span class="dv">1</span>, tzinfo<span class="op">=</span>GERMANY_TZ),</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    schedule<span class="op">=</span><span class="st">"30 12 * * *"</span>,   <span class="co"># every day at 12:30 Europe/Berlin</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    catchup<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    max_active_runs<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    tags<span class="op">=</span>[<span class="st">"dbt"</span>, <span class="st">"signal"</span>, <span class="st">"substation"</span>],</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    on_failure_callback<span class="op">=</span>[slack_fail_alert],</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> dbt_signal_layered():</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> EmptyOperator(task_id<span class="op">=</span><span class="st">"start"</span>)</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">@task</span>(task_id<span class="op">=</span><span class="st">"run_bronze"</span>)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> run_bronze():</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>        cmd <span class="op">=</span> <span class="st">"cd /usr/app/my_dbt_project &amp;&amp; dbt run --select tag:bronze"</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(cmd)</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>        subprocess.run(cmd, check<span class="op">=</span><span class="va">True</span>, shell<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">@task</span>(task_id<span class="op">=</span><span class="st">"run_silver"</span>)</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> run_silver():</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>        cmd <span class="op">=</span> <span class="st">"cd /usr/app/my_dbt_project &amp;&amp; dbt run --select tag:silver"</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(cmd)</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>        subprocess.run(cmd, check<span class="op">=</span><span class="va">True</span>, shell<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">@task</span>(task_id<span class="op">=</span><span class="st">"run_intermediate"</span>)</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> run_intermediate():</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>        cmd <span class="op">=</span> <span class="st">"cd /usr/app/my_dbt_project &amp;&amp; dbt run --select tag:intermediate"</span></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(cmd)</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>        subprocess.run(cmd, check<span class="op">=</span><span class="va">True</span>, shell<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">@task</span>(task_id<span class="op">=</span><span class="st">"run_gold"</span>)</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> run_gold():</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>        cmd <span class="op">=</span> <span class="st">"cd /usr/app/my_dbt_project &amp;&amp; dbt run --select tag:gold"</span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(cmd)</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>        subprocess.run(cmd, check<span class="op">=</span><span class="va">True</span>, shell<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">@task</span>(task_id<span class="op">=</span><span class="st">"test_silver"</span>)</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> test_silver():</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>        cmd <span class="op">=</span> <span class="st">"cd /usr/app/my_dbt_project &amp;&amp; dbt test --select tag:silver"</span></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(cmd)</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>        subprocess.run(cmd, check<span class="op">=</span><span class="va">True</span>, shell<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>    end <span class="op">=</span> EmptyOperator(task_id<span class="op">=</span><span class="st">"end"</span>)</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>    start <span class="op">&gt;&gt;</span> run_bronze() <span class="op">&gt;&gt;</span> run_silver() <span class="op">&gt;&gt;</span> run_intermediate() <span class="op">&gt;&gt;</span> run_gold() <span class="op">&gt;&gt;</span> test_silver() <span class="op">&gt;&gt;</span> end</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>dag <span class="op">=</span> dbt_signal_layered()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>minkun@instance-20260311-173303:~/30-airflow$ <code>docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Status}}"</code></p>
+<p>minkun@instance-20260311-173303:~$ <code>docker exec -it airflow-dag-processor-1 bash</code></p>
+<p>airflow@97f2218af7c0:/opt/airflow$ airflow dags list | grep dbt_signal_layered</p>
+</div>
+</div>
+<p>Then go to http://34.40.116.42:8085 and we can perform:</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/medal06.png" class="img-fluid figure-img" width="800"></p>
+<figcaption class="margin-caption">Figure 12. Airflow web console</figcaption>
+</figure>
+</div>
+<p>The following demonstration video clip illustrates the implemented workflow.</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/EVqLe9Gzt70" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 <!--
 
 ## Bibliography
-\[1\] I. Kobyzev, S. J. D. Prince and M. A. Brubaker, "Normalizing
-Flows: An Introduction and Review of Current Methods," in IEEE
-Transactions on Pattern Analysis and Machine Intelligence, vol. 43, no.
-11, pp. 3964-3979.
-
-\[2\] Durkan, C., Bekasov, A., Murray, I., & Papamakarios, G. (2019).
-Neural Spline Flows. Advances in Neural Information Processing Systems,
-abs/1906.04032.
-https://proceedings.neurips.cc/paper/2019/hash/7ac71d433f282034e088473244df8c02-Abstract.html
-
-\[3\] Radev, S. T., Mertens, U. K., Voss, A., Ardizzone, L., & Kothe, U.
-(2022). BayesFlow: Learning Complex Stochastic Models With Invertible
-Neural Networks. IEEE Transactions on Neural Networks and Learning
-Systems, 33(4), 1452–1466.
+\[1\] Afroz, Python (2023). Power Exchange Data Germany. https://www.kaggle.com/datasets/
+pythonafroz/power-exchange-data-germany. Accessed: 2026-01-27.
 
 -->
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Minkun Kim">
-<meta name="dcterms.date" content="2025-10-28">
+<meta name="dcterms.date" content="2025-09-18">
 
 <title>Gaussian Process – Minkun Kim</title>
 <style>
@@ -102,7 +102,7 @@ window.Quarto = {
 
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -170,15 +170,16 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Gaussian Process</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Predictive Bayesian</div>
+    <div class="quarto-category">Risk Modeling</div>
   </div>
   </div>
 
@@ -196,7 +197,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 28, 2025</p>
+      <p class="date">September 18, 2025</p>
     </div>
   </div>
   
@@ -208,109 +209,315 @@ window.Quarto = {
 </header>
 
 
-<p>In generative model we are interested in estimating distribution of <span class="math inline">\(x \in \mathbb{R}^D\)</span> by integrating out latent variable <span class="math inline">\(z \in \mathbb{R}^D\)</span>, that is</p>
+<p>A stochastic process is a collection of random variables indexed by time, space, or some other input. A stochastic process gives you a whole sequence (unknown function) of random outcomes. A <strong>Gaussian process (GP)</strong> is a stochastic process such that, for any finite set of input points, the corresponding random variables follow a joint multivariate normal distribution. A GP is known for a flexible nonparametric Bayesian model used for prediction, classification, or function approximation.</p>
+<p>Rather than specifying a fixed functional form, a GP defines a <strong>probability distribution over functions</strong>. This makes it especially attractive when the underlying relationship between predictors and responses is too complex or unknown in advance.</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/GPbasic.png" class="img-fluid figure-img" width="700"></p>
+<figcaption class="margin-caption">Figure 01. How can we approximate a random unknown function?</figcaption>
+</figure>
+</div>
+<p>Formally, a function <span class="math inline">\(f(x)\)</span> is said to follow a GP if, for any finite collection of input points <span class="math inline">\(x_1, x_2, \dots, x_n\)</span>, the corresponding vector of function values:</p>
 <p><span class="math display">\[
-p(x) = \int p(x | z)p_z(z)dz
+\mathbf{f} =
+\begin{bmatrix}
+f(x_1) \\
+f(x_2) \\
+\vdots \\
+f(x_n)
+\end{bmatrix}
+\]</span> has a multivariate normal distribution. This is written as</p>
+<p><span class="math display">\[
+\mathbf{f} \sim \mathcal{GP}\bigl( \; \mathbf{\overline{m}}(x), \; \mathbf{\overline{K}}(x, x') \; \bigr),
 \]</span></p>
-<p>The integral is usually intractable. In normalizing flow, we pick <span class="math inline">\(p_z(z)\)</span> to be a simple distirbution such as standard normal distribution <span class="math inline">\(N(0, I_D)\)</span>, and transform <span class="math inline">\(p_z(z)\)</span> with <span class="math inline">\(g: \mathbb{R}^D \rightarrow \mathbb{R}^D\)</span>. We pick <span class="math inline">\(g\)</span> to be diffeomorphism, that is, <span class="math inline">\(g\)</span> is 1. bijective, 2. differentiable, 3. its inverse is differentiable. This allows us to express <span class="math inline">\(p(x)\)</span> using change of variable formula (without any intractable integral involved)</p>
+<p>where <span class="math inline">\(\mathbf{\overline{m}}(x)\)</span> is the <strong>mean function</strong> vector and <span class="math inline">\(\mathbf{\overline{K}}(x, x')\)</span> is the <strong>variance-covariance matrix</strong> (kernel matrix).</p>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/GP_anima.gif" class="img-fluid figure-img" width="600"></p>
+<figcaption class="margin-caption">This is what the GP sampling look like.</figcaption>
+</figure>
+</div>
+<p>Given input points <span class="math inline">\(x_1, x_2, \dots, x_n\)</span>, the <strong>mean function</strong> vector is defined as</p>
 <p><span class="math display">\[
-p(x) = p_z(g^{-1}(x)) \left|\det  \frac{\partial g^{-1}(x)}{\partial x} \right|
-:=  p_z(f(x)) \left|\det  \frac{\partial f(x)}{\partial x} \right|
-\]</span> We just defined <span class="math inline">\(f := g^{-1}\)</span>. <span class="math inline">\(g\)</span> is referred as <em>generative</em> path because we try to generate <span class="math inline">\(x\)</span> from a simple distribution <span class="math inline">\(p_z\)</span>, whereas <span class="math inline">\(f\)</span> is referred as <em>normalising</em> path because we try to degenerate <span class="math inline">\(x\)</span> back to <span class="math inline">\(z \sim p_z\)</span>, where <span class="math inline">\(p_z\)</span> is usually normal distribution.</p>
-<p><span class="math inline">\(f\)</span> is usually parameterized by neural network to maximise likelihood <span class="math inline">\(p(x)\)</span>. <span class="math inline">\(f\)</span> is usually chosen such that the determinant of the Jacobian is easy to calculate. Training and evaluation of density requires normalising path while sampling requires generative path as</p>
-<p><span class="math display">\[
-x \sim p(x)
-\mathrel{\Leftrightarrow}
-z \sim p_z(z), x = g(z)
+\mathbf{\overline{m}}(x) = \{ \; \mathbb{E}[f(x_1)],\; \mathbb{E}[f(x_2)],\cdots  \mathbb{E}[f(x_n)]  \;\}
 \]</span></p>
-<p>People often care about <span class="math inline">\(f\)</span> because fast evaluation of <span class="math inline">\(f\)</span> is needed for fast training. If we need fast sampling, then <span class="math inline">\(g\)</span> is cared.</p>
-<p>In SBI, coupling flow and autoregressive flow is commonly used.</p>
-<section id="coupling-flow" class="level2">
-<h2 class="anchored" data-anchor-id="coupling-flow">Coupling flow</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>…but usually the mean function is often taken to be <span class="math inline">\(\approx 0\)</span> if the output data has been centered or standardized…</p>
+</div>
+</div>
+<p>Given input points <span class="math inline">\(x_1, x_2, \dots, x_n\)</span>, the <strong>variance-covariance matrix</strong> induced by a Kernel <span class="math inline">\(k(x_i, x_j)\)</span> is defined as</p>
 <p><span class="math display">\[
-\begin{align}
-x &amp;= [x^A, x^B] \\
-\phi &amp;= NN(x^B) \\
-y^A &amp;= \mathbf{h}_\phi(x^A) = [h_{\phi_1}(x_1),...,h_{\phi_d}(x_d)]  \\
-y^B &amp;= x^B \\
-y &amp;= [y^A, y^B]
-\end{align}
+\mathrm{COV}(\mathbf{f}) = \mathbf{\overline{K}}_{n \times n} =
+\begin{bmatrix}
+k(x_1, x_1) &amp; k(x_1, x_2) &amp; \cdots &amp; k(x_1, x_n) \\
+k(x_2, x_1) &amp; k(x_2, x_2) &amp; \cdots &amp; k(x_2, x_n) \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+k(x_n, x_1) &amp; k(x_n, x_2) &amp; \cdots &amp; k(x_n, x_n)
+\end{bmatrix}.
 \]</span></p>
-<p>Firstly, <span class="math inline">\(x\)</span> is split into two dimension such that <span class="math inline">\(x^A \in \mathbb{R}^d, x^B \in \mathbb{R}^{D - d}\)</span>. Then one part is fed into NN: <span class="math inline">\(\mathbb{R}^{D - d} \rightarrow \mathbb{R}^k\)</span> to learn parameter <span class="math inline">\(\phi \in  \mathbb{R}^k\)</span>. The NN is referred as <em>conditioner</em>. This <span class="math inline">\(\phi\)</span> is then coupled with another part <span class="math inline">\(x^A\)</span> through invertible and differentiable function <span class="math inline">\(\mathbf{h}\)</span> called <em>transformer</em> or <em>coupling function</em>. <span class="math inline">\(k\)</span> depends on the choice of coupling function. Note that transformer is nothing to do with the ‘query-key-value’ transformers. Coupling function is usually applied element-wise. This transformed <span class="math inline">\(x^A\)</span> is then concatenated with <span class="math inline">\(x^B\)</span>, which gives output <span class="math inline">\(y\)</span>. Its inverse is given by</p>
+<p>where</p>
 <p><span class="math display">\[
-\begin{align}
-x^B &amp;= y^B \\
-\phi &amp;= NN(x^B) \\
-x^A &amp; = \mathbf{h}_{\phi}^{-1}(y^A)
-\end{align}
+\mathrm{COV}( f(x_i)\cdot f(x_j) ) = k(x_i, x_j), \qquad i,j = 1,\dots,n.
 \]</span></p>
-<p>This ‘coupling’ is repeated multiple times, combined with non-stochastic permutation such that all the dimensions <span class="math inline">\(i = 1,...,D\)</span> are interacted to each other. The determinant of Jacobian is given by <span class="math inline">\(\prod_{i=1}^d \frac{\partial h_{\phi_i}(x_i)}{\partial x_i}\)</span>.</p>
-<p>In NPE, <span class="math inline">\(x \leftarrow \theta\)</span> and the conditioner is also conditioned on data as <span class="math inline">\(\phi = NN(\theta^B, \mathcal{D})\)</span>. In NLE, <span class="math inline">\(x \leftarrow \mathcal{D}\)</span> and <span class="math inline">\(\phi = NN(\mathcal{D}^B, \theta)\)</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>…but usually <span class="math inline">\(k(x_i, x_j) = \mathbb{E}[f(x_i)\cdot f(x_j)]\)</span> because <span class="math inline">\(\mathrm{COV}( f(x_i)\cdot f(x_j) ) = \mathbb{E}[f(x_i)\cdot f(x_j)] - \mathbb{E}[f(x_1)]\mathbb{E}[f(x_2)]\)</span> where <span class="math inline">\(\mathbb{E}[f(x_1)]\mathbb{E}[f(x_2)]=0\)</span></p>
+</div>
+</div>
+<section id="now-let-us-imagine-what-gives-this-shape." class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="now-let-us-imagine-what-gives-this-shape.">Now, let us imagine what gives this shape.</h3>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><img src="images/GPbasicmin.png" class="img-fluid figure-img" width="200"></p>
+<figcaption class="margin-caption">Figure 02. where does this shape come from?</figcaption>
+</figure>
+</div>
 </section>
-<section id="autoregressive-flow" class="level2">
-<h2 class="anchored" data-anchor-id="autoregressive-flow">Autoregressive flow</h2>
+<section id="my-belief-prior" class="level2">
+<h2 class="anchored" data-anchor-id="my-belief-prior">[1]. My belief (Prior)</h2>
+<p>Do we expect the underlying function to be smooth, roughly linear, periodic, or highly wiggly? Should nearby input points lead to similar outputs, or might the function change sharply even over short distances? In GP, these assumptions are encoded through the kernel. The kernel describes <strong>how similar two outputs are expected to be when their inputs are close or far apart</strong>. More precisely, it defines the prior covariance between function values at two input locations. When the kernel value is large, the two outputs are strongly correlated and tend to behave similarly. When the kernel value is small, the outputs are less strongly related and may differ more substantially. In this way, the kernel is where we encode our prior beliefs about the function.</p>
+<p>The kernel is a bit like autocorrelation, but more general. Autocorrelation tells us how much a variable resembles its past values over time. The kernel tells us how similar two future ? output values should be at any two input points. More fundamentally, autocorrelation usually describes dependence across time lags in a sequence, whereas the kernel specifies prior dependence between function values at arbitrary input locations.</p>
+<p>From this point of view, studying the kernel is really just studying our prior beliefs about the shape of the unknown function. We now turn to the kernel in more detail.</p>
+<p><br></p>
+<section id="a-fundamental-intuition-of-kernels" class="level4">
+<h4 class="anchored" data-anchor-id="a-fundamental-intuition-of-kernels">(a) Fundamental Intuition of Kernels</h4>
+<p>At the most basic level, a kernel is a function of two inputs. It gives the information on data points that lie in the proximity of the data point under consideration…and it returns a number describing how strongly those two inputs are connected. Depending on the context, that output may be interpreted as a <strong>weight</strong>, a <strong>similarity</strong>, or a <strong>covariance</strong>. This is then used to solve the problem. That broad idea appears across many settings such as kernel density estimation (KDE), kernel smoothing (KS), SVM, and GP, etc. In short, a kernel measures a structured relationship between two points. The relationship is based on 1) <code>distance</code>, 2) <code>distance + roughness</code>, 3) <code>inner product</code>. Let us see one by one.</p>
+<p><strong>The KDE kernel acts as a local weighting device, whereas the GP kernel acts as a covariance function describing dependence between input locations.</strong></p>
+<p>In KDE, the kernel is typically written as a one-variable function <span class="math inline">\(k(x_i)\)</span>, often chosen to be a symmetric bump centered at <span class="math inline">\(x_i\)</span>. <span class="math display">\[
+k_h(x-x_i)=\frac{1}{h}k\left(\frac{x-x_i}{h}\right) \quad \text{where}\; h\; \text{is the spread of the bump}, \quad E[\mathbf{f}(x)]=\frac{1}{n}\sum_{i=1}^n k_h(x-x_i) \\
+\]</span> If choosing the Gaussian kernel, <span class="math display">\[
+k_h(x-x_i) = \frac{1}{h}\frac{1}{\sqrt{2\pi}} \exp\left(-\frac{1}{2}\left(\frac{x-x_i}{h}\right)^2\right)
+=\frac{1}{\sqrt{2\pi}h}\exp\left(-\frac{(x-x_i)^2}{2h^2}\right).
+\]</span> It is interpreted as a localized contribution centered at the datapoint <span class="math inline">\(x_i\)</span>. The density estimate <span class="math inline">\(E[\mathbf{f}(x)]\)</span> is then obtained by summing these local kernel contributions over all observations. For fixed <span class="math inline">\(x\)</span>:</p>
+<ul>
+<li>large <span class="math inline">\(k_h(x-x_i)\)</span> <span class="math inline">\(\rightarrow\)</span> large influence of <span class="math inline">\(x_i\)</span></li>
+<li>small <span class="math inline">\(k_h(x-x_i)\)</span> <span class="math inline">\(\rightarrow\)</span> small influence of <span class="math inline">\(x_i\)</span></li>
+</ul>
+<p>That is why we call this kernel a weighting device.</p>
+<p>By contrast, in GP modeling, the kernel is a two-variable function <span class="math inline">\(k(x,x')\)</span> that defines the covariance between the random variables <span class="math inline">\(f(x)\)</span> and <span class="math inline">\(f(x')\)</span>. <span class="math display">\[
+k(x,x') = ?
+\]</span> What does it look like? What differs across methods is the meaning of each entry <span class="math inline">\(k(x_i,x_j)\)</span>.</p>
+<ul>
+<li>In linear kernels for GP, it acts like an <strong>inner-product similarity</strong>.</li>
+<li>In Sqrd Exp kernels for GP, it acts like a <strong>distance-based covariance</strong>.</li>
+<li>In Matérn kernels for GP, it controls <strong>distance + smoothness</strong>.</li>
+</ul>
+<p>The common thread is that the kernel defines how information is shared across the input space.</p>
+<p><br><br></p>
+</section>
+<section id="b-different-kernels-for-gp" class="level4">
+<h4 class="anchored" data-anchor-id="b-different-kernels-for-gp">(b) Different kernels for GP</h4>
+<section id="b-1.-linear-kernel-kernels-as-inner-product-similarity" class="level5">
+<h5 class="anchored" data-anchor-id="b-1.-linear-kernel-kernels-as-inner-product-similarity">b-1. Linear kernel: kernels as inner-product similarity</h5>
+<p>A <strong>linear kernel</strong> is typically written as</p>
 <p><span class="math display">\[
-\begin{align}
-\text{For } i &amp;= 2,...,D:\\
-\phi_i &amp;= NN(x_{1:i-1}) \\
-y_i &amp;= h_{\phi_i}(x_i)\\
-\end{align}
-\]</span></p>
-<p>where <span class="math inline">\(\phi_1\)</span> is constant. This is very similar to coupling flow except that instead of splitting dimensions into half, dimension is split in autoregressive manners into <span class="math inline">\(x_i\)</span> and <span class="math inline">\(x_{1:i-1}\)</span> mutiple times. In practice, this coupling functions can be implemented without recursion using masking.</p>
-<p>In NPE, <span class="math inline">\(\phi_1 = NN(\mathcal{D}), \phi_i = NN(\theta_{1:i-1}, \mathcal{D}), 1 &lt; i \leq D\)</span>. In NLE, <span class="math inline">\(\phi_1 = NN(\theta),\phi_i = NN(\mathcal{D}_{1:i-1}, \theta), 1 &lt; i \leq D\)</span></p>
-</section>
-<section id="coupling-function" class="level2">
-<h2 class="anchored" data-anchor-id="coupling-function">Coupling function</h2>
-<section id="affine" class="level3">
-<h3 class="anchored" data-anchor-id="affine">Affine</h3>
+k(x,x') = &lt;x,x'&gt; = x^\top x'
+\]</span> or, more generally,</p>
 <p><span class="math display">\[
-h_{\phi_{i}}(x_i) = \alpha_i x_i + \beta_i, \quad \phi_i = (\alpha_i, \beta_i)
+k(x,x') = \sigma_b^2 + \sigma_v^2 x^\top x'.
+\]</span> At first glance, this does not look like a neighborhood rule at all, because it is not written in terms of distance. Instead, it uses the <strong>inner product</strong> between two inputs. What does that mean intuitively?</p>
+<p>The inner product measures how much two vectors align with one another. If two input vectors point in a similar direction, their inner product is large. If they are orthogonal or weakly aligned, their inner product is small. Thus, the linear kernel says that two inputs are related not because they are geographically close, but because they are <strong>linearly compatible</strong>.</p>
+<p>To see the intuition more clearly, suppose</p>
+<p><span class="math display">\[
+x = \begin{bmatrix}1 \\ 1\end{bmatrix}, \qquad
+x' = \begin{bmatrix}10 \\ 10\end{bmatrix}.
 \]</span></p>
-<p>where <span class="math inline">\(\alpha_i &gt; 0, \beta_i \in \mathbb{R}\)</span>. For affine coupling function, <span class="math inline">\(k = d \times 2\)</span>.</p>
+<p>Then</p>
+<p><span class="math display">\[
+x^\top x' = \sum x_i x_i' = 20,
+\]</span></p>
+<p>which is large. The two points are not close in Euclidean distance, but they are strongly aligned. So the linear kernel judges them to be strongly related.</p>
+<p>In GP language, if we use a linear kernel, then <span class="math inline">\(k(x,x') = \mathrm{Cov}(f(x),f(x'))\)</span> inherits this inner-product structure. That means the model is expressing the belief that the unknown function behaves in a broadly linear way. So the linear kernel says:</p>
+<blockquote class="blockquote">
+<p>Prior belief:::: points are related to the extent that they align with the same linear trend.</p>
+</blockquote>
+<p>Thus, the notion of “closeness” has changed. It is no longer distance-based closeness. It is <strong>linear-algebraic closeness</strong>.</p>
+<p><br><br></p>
 </section>
-<section id="monotonic-rational-quadratic-spline" class="level3">
-<h3 class="anchored" data-anchor-id="monotonic-rational-quadratic-spline">Monotonic rational quadratic spline</h3>
-<p>In neural spline flow, monotonic rational quadratic spline (RQ-spline) is used for <span class="math inline">\(h\)</span>. It allows to model more expressive transformation from <span class="math inline">\(x\)</span> to <span class="math inline">\(y\)</span> and to <span class="math inline">\(z\)</span> at final. Monotonicity is necessary for bijectivity. In a nutshell, <span class="math inline">\(h\)</span> is defined in the interval <span class="math inline">\([-B, B]\)</span> and that interval is split into <span class="math inline">\(K\)</span> bins using <span class="math inline">\(K + 1\)</span> knots, where <span class="math inline">\(B\)</span> and <span class="math inline">\(K\)</span> are hyper-parameters. The height and the width of the bins are trainable parameters <span class="math inline">\((\phi_{h,j}, \phi_{w, j}), j = 1,...,K\)</span>, and derivatives at each knots are also trainable parameters <span class="math inline">\(\phi_{d,j}, j = 1,...,K-1\)</span>. These parameters defines the RQ-spline. In total, the coupling function have <span class="math inline">\(k = (3K - 1) \times d\)</span> parameters.</p>
-<p>In this figure, <span class="math inline">\(K = 10\)</span> is picked.</p>
+<section id="b-2.-squared-exponential-kernel-kernels-as-distance-based-covariance" class="level5">
+<h5 class="anchored" data-anchor-id="b-2.-squared-exponential-kernel-kernels-as-distance-based-covariance">b-2. Squared exponential kernel: kernels as distance-based covariance</h5>
+<p>The <strong>squared exponential kernel</strong>, also called the Gaussian or RBF kernel, is the classic distance-based kernel in GP:</p>
+<p><span class="math display">\[
+k(x,x') = \sigma_f^2 \exp\left(-\frac{(x-x')^2}{2\ell^2}\right).
+\]</span></p>
+<p>This kernel is perhaps the easiest GP kernel to understand intuitively. It says that two points should have similar function values if their input locations are close. The covariance decays smoothly as the distance <span class="math inline">\(|x-x'|\)</span> increases.</p>
+<p>There are two main parameters (how quickly similarity decays with distance):</p>
+<ul>
+<li><span class="math inline">\(\sigma_f^2\)</span>: the signal variance, controlling the vertical smoothness.</li>
+<li><span class="math inline">\(\ell\)</span>: the length-scale, controlling the horizontal smoothness.</li>
+</ul>
+<p>If <span class="math inline">\(\sigma_f^2\)</span> is large, the overall variance of the Gaussian process is large, so the sampled functions can deviate more substantially from the mean function. In other words, the function tends to exhibit larger vertical fluctuations.</p>
+<p>If <span class="math inline">\(\sigma_f^2\)</span> is small, the overall variance of the Gaussian process is small, so the sampled functions remain closer to the mean function. Consequently, the function tends to have smaller vertical fluctuations.</p>
+<p>If <span class="math inline">\(\ell\)</span> is large, then even points that are moderately far apart still have substantial covariance. As a result, the function changes slowly and looks very smooth.</p>
+<p>If <span class="math inline">\(\ell\)</span> is small, the covariance drops quickly as soon as points are separated. Then the function is allowed to vary more rapidly across the input space.</p>
+<p>The key fact is that the kernel depends only on the distance between <span class="math inline">\(x\)</span> and <span class="math inline">\(x'\)</span>. So here the notion of relatedness is very direct:</p>
+<blockquote class="blockquote">
+<p>Prior belief:::: points that are close in input space should produce similar outputs.</p>
+</blockquote>
+<p>This means, in a GP with a squared exponential kernel, a nearby point gets <span class="math inline">\(k(x,x') = \mathrm{Cov}(f(x),f(x'))\)</span> larger, and it has stronger influence at <span class="math inline">\(x\)</span>. Thus, distance controls how much information is shared.</p>
+<p><br><br></p>
 </section>
+<section id="b-3.-matérn-kernel-kernels-as-distance-plus-controlled-roughness" class="level5">
+<h5 class="anchored" data-anchor-id="b-3.-matérn-kernel-kernels-as-distance-plus-controlled-roughness">b-3. Matérn kernel: kernels as distance plus controlled roughness</h5>
+<p>The <strong>Matérn kernel</strong> retains the distance-based intuition but adds something important: explicit control over the roughness of the function. A common form is</p>
+<p><span class="math display">\[
+k(x,x') =
+\sigma_f^2
+\frac{2^{1-\nu}}{\Gamma(\nu)}
+\left(
+\frac{\sqrt{2\nu}\,|x-x'|}{\ell}
+\right)^\nu
+K_\nu\left(
+\frac{\sqrt{2\nu}\,|x-x'|}{\ell}
+\right),
+\]</span></p>
+<p>where <span class="math inline">\(\nu &gt; 0\)</span> is a smoothness parameter, <span class="math inline">\(\ell\)</span> is a length-scale, <span class="math inline">\(\Gamma(\cdot)\)</span> is the gamma function, and <span class="math inline">\(K_\nu(\cdot)\)</span> is a modified Bessel function. The formula looks intimidating, but the intuition is actually simple.</p>
+<p>Like the squared exponential kernel, the Matérn kernel still says that points closer together should have more strongly related outputs. So it is still fundamentally a <strong>distance-based kernel</strong>. However, it does not impose the same extreme degree of smoothness as the squared exponential kernel.</p>
+<p>The parameter <span class="math inline">\(\nu\)</span> controls how smooth the sample paths are:</p>
+<ul>
+<li>small <span class="math inline">\(\nu\)</span> gives rougher functions</li>
+<li>large <span class="math inline">\(\nu\)</span> gives smoother functions</li>
+<li>as <span class="math inline">\(\nu \to \infty\)</span>, the Matérn kernel approaches the squared exponential kernel</li>
+</ul>
+<p>This is the most important intuitive difference between the two. The squared exponential kernel says the latent function should be extremely smooth. The Matérn kernel says:</p>
+<blockquote class="blockquote">
+<p>Prior belief:::: nearby points should still be related, but the control over the roughness of the function is required.</p>
+</blockquote>
+<p>This makes the Matérn family especially useful in practice, because many real processes are smooth only up to a point. They may not be infinitely differentiable, and they may exhibit mild irregularity even while remaining continuous and locally coherent.</p>
+<p>There are also special cases of the Matérn kernel with especially clean forms.</p>
+<p>For example, when <span class="math inline">\(\nu=\tfrac{1}{2}\)</span>,</p>
+<p><span class="math display">\[
+k(x,x') = \sigma_f^2 \exp\left(-\frac{|x-x'|}{\ell}\right),
+\]</span> which produces rougher sample paths.</p>
+<p>When <span class="math inline">\(\nu=\tfrac{3}{2}\)</span>,</p>
+<p><span class="math display">\[
+k(x,x') = \sigma_f^2
+\left(1+\frac{\sqrt{3}|x-x'|}{\ell}\right)
+\exp\left(-\frac{\sqrt{3}|x-x'|}{\ell}\right),
+\]</span></p>
+<p>and when <span class="math inline">\(\nu=\tfrac{5}{2}\)</span>,</p>
+<p><span class="math display">\[
+k(x,x') = \sigma_f^2
+\left(
+1+\frac{\sqrt{5}|x-x'|}{\ell} + \frac{5(x-x')^2}{3\ell^2}
+\right)
+\exp\left(-\frac{\sqrt{5}|x-x'|}{\ell}\right).
+\]</span> These formulas help reveal the same idea: distance still matters, but the shape of decay is adjusted so that the implied functions can be less smooth than those from the squared exponential kernel.</p>
+<p><br></p>
+</section>
+</section>
+<section id="we-can-now-pull-the-four-perspectives-together." class="level4">
+<h4 class="anchored" data-anchor-id="we-can-now-pull-the-four-perspectives-together.">We can now pull the four perspectives together.</h4>
+<p>In KDE, the kernel tells us how much nearby observations should contribute to a local estimate. In the linear kernel, the kernel tells us how strongly two inputs align through an inner-product structure. In the squared exponential kernel, the kernel tells us how covariance decays with distance. In the Matérn kernel, it does the same, but with explicit control over smoothness.</p>
+<p>These look like different stories, but they share one underlying principle:</p>
+<blockquote class="blockquote">
+<p>a kernel is a rule for borrowing information across points.</p>
+</blockquote>
+<p>In GP, the shared essence becomes especially clear because the kernel is interpreted as a covariance function:</p>
+<p><span class="math display">\[
+k(x,x') = \mathrm{Cov}(f(x),f(x')).
+\]</span> Once we evaluate this kernel for all pairs of inputs, we obtain the varaince-covariance matrix and this matrix determines how the latent function is allowed to behave over the input space. Thus, in a GP, the kernel does not directly give the final fitted curve. Rather, it defines the prior structure of the unknown function. It tells us whether information should be shared only locally, whether it should follow a linear trend, whether it should produce extremely smooth trajectories, or whether it should allow moderate roughness. This is why choosing a kernel is such a central modeling decision.</p>
+<p><br><br></p>
+</section>
+</section>
+<section id="update-with-observations-posterior" class="level2">
+<h2 class="anchored" data-anchor-id="update-with-observations-posterior">[2]. Update with observations (Posterior)</h2>
+<p>Again, we have finite collection of input points <span class="math inline">\(x_1, x_2, \dots, x_n\)</span>, then the GP prior is defined as</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+\mathbf{f}: (f(x_1), \dots, f(x_n)\bigr)^\top \sim \;\mathbf{MVN}\bigl( \; \mathbf{\overline{m}}(x), \; \mathbf{\overline{K}}_{n \times n} \; \bigr) \quad \Rightarrow \quad \text{This is the prior} \;( \mathbf{f} \; \text{is random})
+\]</span></p>
+</div>
+</div>
+<p>Under the GP framework, the observed outputs are jointly Gaussian, and inference proceeds by conditioning on the training data. Suppose we observe noisy data: <span class="math inline">\(\mathbf{X}: (x_1, \dots, x_n)^\top\)</span> denote the observed inputs and <span class="math inline">\(\mathbf{Y}: (y_1, \dots, y_n)^\top\)</span> the observed outputs.</p>
+<p><span class="math display">\[
+y_i = f(x_i) + \varepsilon_i, \qquad \varepsilon_i \sim \mathcal{N}(0, \sigma_{\epsilon}^2),
+\]</span> for <span class="math inline">\(i = 1, \dots, n\)</span>. And <span class="math inline">\(\varepsilon_i\)</span> is iid. then the noise model is defined as</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+\mathbf{Y}|\mathbf{f} \;\sim \;\mathbf{MVN}\big(\;\mathbf{f}, \; \sigma_{\epsilon}^2\mathbf{I} \; \big) \quad \Rightarrow \quad \text{This is the likelihood.} \;( \mathbf{Y} \; \text{is random})
+\]</span></p>
+</div>
+</div>
+<p>This is because <span class="math inline">\(\mathbf{Y}= \mathbf{f} + \mathbf{\epsilon}\)</span> and <span class="math inline">\(\mathbf{VAR}(y|x_i)=\beta^2\mathbf{VAR}(x_i)+\sigma_{\epsilon}^2\)</span></p>
+<p>However, <span class="math inline">\(\mathbf{VAR}(x_i)=0\)</span>; therefore, <span class="math inline">\(\mathbf{VAR}(y|x_i)=\sigma_{\epsilon}^2\)</span> since <span class="math inline">\(x_i\)</span> is given.</p>
+<p>In addition, we know that</p>
+<p><span class="math display">\[
+\mathbf{Y}|\mathbf{f} = \mathbf{Y} = \mathbf{f} + \mathbf{\epsilon} \quad \text{where} \quad \mathbf{\epsilon} \sim \textbf{MVN}(0, \; \sigma_{\epsilon}^2\mathbf{I})
+\]</span> On this, if we bring <span class="math inline">\(\mathbf{f}\)</span> here, then</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+\mathbf{Y},\mathbf{f}\; \sim \;\mathbf{MVN}\Big( \; \mathbf{\overline{m}}(x), \; \mathbf{\overline{K}}_{n \times n} + \sigma_{\epsilon}^2\mathbf{I} \; \Big) \quad \Rightarrow \quad \text{This is the joint} \;( \text{both}\; \mathbf{Y} \text{and} \; \mathbf{f} \; \text{are random})
+\]</span></p>
+</div>
+</div>
+<p>So… now we want to predict <span class="math inline">\(y^*\)</span> for the new input <span class="math inline">\(x^*\)</span>. For a new input <span class="math inline">\(x^*\)</span>, the predictive distribution of <span class="math inline">\(f(x^*)\)</span> is also Gaussian, with posterior mean and variance given by</p>
+<p><span class="math display">\[
+\mu^* = \mathbf{\overline{m}}(x^*) + \mathbf{\overline{K}}(x^*, \mathbf{X}) \bigl[\mathbf{\overline{K}}_{n \times n} + \sigma_{\epsilon}^2\mathbf{I}\bigr]^{-1}(\mathbf{Y}-\mathbf{\overline{m}}(x)),
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\Sigma^{*} = \mathbf{\overline{K}}(x^*, x^*) - \mathbf{\overline{K}}(x^*, \mathbf{X}) \bigl[\mathbf{\overline{K}}_{n \times n} + \sigma_{\epsilon}^2\mathbf{I}\bigr]^{-1} + \sigma_n^2 I\bigr]^{-1} \mathbf{\overline{K}}(\mathbf{X},x^*)
+\]</span> Therefore, our predictive value follows:</p>
+<p><span class="math display">\[
+y^*|\mathbf{Y},\mathbf{X},x^*\; \sim \;\mathbf{MVN}\Big( \; \mu^*, \; \Sigma^{*} + \sigma_{\epsilon}^2\mathbf{I} \; \Big)
+\]</span></p>
+<p>These expressions show one of the most important advantages of GP: they provide not only a point prediction but also a <strong>measure of uncertainty</strong>. This probabilistic feature is valuable in many applications where uncertainty quantification is essential.</p>
+<p>GP have several strengths. First, they are highly flexible and can approximate a wide range of functional relationships without requiring a rigid parametric specification. Second, they naturally produce uncertainty intervals for predictions.</p>
+<p>However, GP also have limitations. The computational cost is typically dominated by inversion of the <span class="math inline">\(n \times n\)</span> covariance matrix, which requires approximately <span class="math inline">\(O(n^3)\)</span> operations. As a result, standard GP models may become computationally expensive for very large datasets.</p>
+<p>In summary, the GP is a powerful Bayesian tool for modeling unknown functions. Its appeal lies in the combination of flexibility, interpretability, and principled uncertainty quantification. The kernel function is the key modeling component, as it determines the structure of dependence among function values and thereby shapes the unknown functions that the model can represent.</p>
 </section>
 <section id="bibliography" class="level2">
 <h2 class="anchored" data-anchor-id="bibliography">Bibliography</h2>
 <p>[1] I. Kobyzev, S. J. D. Prince and M. A. Brubaker, “Normalizing Flows: An Introduction and Review of Current Methods,” in IEEE Transactions on Pattern Analysis and Machine Intelligence, vol.&nbsp;43, no. 11, pp.&nbsp;3964-3979.</p>
 <p>[2] Durkan, C., Bekasov, A., Murray, I., &amp; Papamakarios, G. (2019). Neural Spline Flows. Advances in Neural Information Processing Systems, abs/1906.04032. https://proceedings.neurips.cc/paper/2019/hash/7ac71d433f282034e088473244df8c02-Abstract.html</p>
 <p>[3] Radev, S. T., Mertens, U. K., Voss, A., Ardizzone, L., &amp; Kothe, U. (2022). BayesFlow: Learning Complex Stochastic Models With Invertible Neural Networks. IEEE Transactions on Neural Networks and Learning Systems, 33(4), 1452–1466.</p>
-</section>
-<section id="appendix" class="level2">
-<h2 class="anchored" data-anchor-id="appendix">Appendix</h2>
-<section id="dual-coupling" class="level3">
-<h3 class="anchored" data-anchor-id="dual-coupling">Dual coupling</h3>
-<p>Sometimes, one block of coupling is defined as two coupling as in [3] such that both split is transformed by coupling function in one unit of coupling.</p>
-<p><span class="math display">\[
-\begin{align}
-x &amp;= [x^A, x^B] \\
-\phi_1 &amp;= NN_1(x^B) \\
-y^A &amp;= \mathbf{h}_{\phi_1}(x^A) \\
-\phi_2 &amp;=  NN_2(y^A)\\
-y^B &amp;= \mathbf{h}_{\phi_2}(x^B) \\
-y &amp;= [y^A, y^B]
-\end{align}
-\]</span></p>
-<p>This is same as applying single coupling flow followed by permutation, which swap <span class="math inline">\(x^A\)</span> and <span class="math inline">\(x^B\)</span> and applying another coupling flow.</p>
-</section>
-<section id="when-d-1" class="level3">
-<h3 class="anchored" data-anchor-id="when-d-1">When <span class="math inline">\(D = 1\)</span></h3>
-<p>In generative model <span class="math inline">\(x\)</span> is usually something high dimensional like image. But in SBI, <span class="math inline">\(D\)</span> could be 1. Coupling flow could be applied in such case. For example in NPE, if <span class="math inline">\(\theta \in \mathbb{R}\)</span> and consider only one coupling, then we have</p>
-<p><span class="math display">\[
-\begin{align}
-\phi &amp;= NN(\mathcal{D}) \\
-z &amp;= \mathbf{h}_{\phi}(\theta)
-\end{align}
-\]</span></p>
-<p>In this case, <span class="math inline">\(\theta\)</span> is not going to be coupled with another split of <span class="math inline">\(\theta\)</span> because <span class="math inline">\(\theta\)</span> is just one-dimensional, but it is still coupled with <span class="math inline">\(\mathcal{D}\)</span>.</p>
-<p>In this case, naturally, coupling flow is same as autoregressive flow given same conditioner and coupling function.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
