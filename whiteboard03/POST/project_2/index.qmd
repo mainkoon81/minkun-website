@@ -10,7 +10,7 @@ execute:
 jupyter: python3
 category: "Reporting"
 author: "Minkun Kim"
-date: "2025-10-18"
+date: "2025-11-19"
 categories:
   - ESRS
 comments:

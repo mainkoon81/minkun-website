@@ -34,7 +34,8 @@ Valuation/Risk Modeling <br>
 Stochastic Modeling <br>
 Nonparametric Bayesian Computing <br>
 Data Engineering <br>
-Data-Driven Design <br>
+Sustainability <br>
+
 :::
 ::: {.g-col-12 .g-col-sm-6}
 #### Education
