@@ -11,5 +11,5 @@ page-layout: full
 title-block-banner: true
 ---
 
-In Energy Economics, sustainability is....
+As economies transition from fossil fuels to low-carbon alternatives, energy decisions are becoming central to financial risk and long-term competitiveness. From renewable energy investment to supply security, sustainability is now deeply connected to energy economics rather than standing apart from it. This shift is also being reinforced by the arrival of the CSRD and ESRS, which are turning sustainability from a largely voluntary ESG exercise into a formal, standardized, and assured part of corporate reporting. In this new environment, sustainability and energy are no longer side issues, but key factors shaping firms’ present and future.
 

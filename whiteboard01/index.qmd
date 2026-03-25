@@ -11,7 +11,9 @@ page-layout: full
 title-block-banner: true
 ---
 
-The mathematical Finance is....
+The quantitative energy finance is characterized by close coupling between financial outcomes and physical system behavior. Unlike equities or bonds, whose valuation is driven primarily by firms' performance, interest rates, etc., energy assets are strongly influenced by the physical realities of the energy system. For instance, price formation of electricity is highly state-dependent: local congestion, generation availability, demand peaks, or transmission bottlenecks, etc. can rapidly alter market conditions and create significant spatial and temporal price differences (`Imagine: when congestion separates network zones, the price at one node may diverge substantially from that at another, creating direct consequences for traders, generators, and structured energy contracts`). In this setting, quantitative analysis must account not only for market uncertainty but also for operational uncertainty. Yes, it requires the joint analysis of market risk and operational risk. 
+
+Of course, quantitative energy finance encompasses three closely related tasks: pricing, risk modeling, and asset valuation. **Pricing** focuses on forecasting quantities such as spot prices, imbalance prices, congestion-related spreads, etc. **Risk modeling** addresses exposure to revenue volatility, cash-flow variability, outage risk, curtailment risk, and broader operational risk. **Asset valuation** extends these considerations to the economic assessment of generation assets, storage systems, grid reinforcement options, demand response portfolios, and maintenance or replacement strategies.
 
 
 

@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Minkun Kim">
-<meta name="dcterms.date" content="2025-10-28">
+<meta name="dcterms.date" content="2025-07-28">
 
-<title>Bayesian Finance – Minkun Kim</title>
+<title>Intro to Black Scholes and Stochastic DE – Minkun Kim</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -176,9 +176,9 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Bayesian Finance</h1>
+<h1 class="title">Intro to Black Scholes and Stochastic DE</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Bayesian approach</div>
+    <div class="quarto-category">Pricing</div>
   </div>
   </div>
 
@@ -196,7 +196,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 28, 2025</p>
+      <p class="date">July 28, 2025</p>
     </div>
   </div>
   
@@ -208,106 +208,211 @@ window.Quarto = {
 </header>
 
 
-<p>In generative model we are interested in estimating distribution of <span class="math inline">\(x \in \mathbb{R}^D\)</span> by integrating out latent variable <span class="math inline">\(z \in \mathbb{R}^D\)</span>, that is</p>
+<section id="stochastic-differential-equations-and-the-blackscholes-model" class="level2">
+<h2 class="anchored" data-anchor-id="stochastic-differential-equations-and-the-blackscholes-model">Stochastic Differential Equations and the Black–Scholes Model</h2>
+<section id="stochastic-differential-equations" class="level3">
+<h3 class="anchored" data-anchor-id="stochastic-differential-equations">1. Stochastic differential equations</h3>
+<p>A <strong>stochastic differential equation (SDE)</strong> is a differential equation that includes a random component. Ordinary differential equations describe how a variable changes over time in a fully deterministic way, whereas stochastic differential equations allow the evolution to be partly unpredictable.</p>
+<p>A simple way to think about this is to imagine the price of a financial asset. Even if we believe that, on average, the price tends to grow over time, the actual path is never perfectly smooth. Instead, it moves up and down in a random way. An SDE is designed to capture both of these features at the same time: a systematic trend and random fluctuations.</p>
+<p>A general SDE can be written as</p>
 <p><span class="math display">\[
-p(x) = \int p(x | z)p_z(z)dz
+dX_t = \mu(X_t,t)\,dt + \sigma(X_t,t)\,dW_t.
 \]</span></p>
-<p>The integral is usually intractable. In normalizing flow, we pick <span class="math inline">\(p_z(z)\)</span> to be a simple distirbution such as standard normal distribution <span class="math inline">\(N(0, I_D)\)</span>, and transform <span class="math inline">\(p_z(z)\)</span> with <span class="math inline">\(g: \mathbb{R}^D \rightarrow \mathbb{R}^D\)</span>. We pick <span class="math inline">\(g\)</span> to be diffeomorphism, that is, <span class="math inline">\(g\)</span> is 1. bijective, 2. differentiable, 3. its inverse is differentiable. This allows us to express <span class="math inline">\(p(x)\)</span> using change of variable formula (without any intractable integral involved)</p>
+<p>Here, <span class="math inline">\(X_t\)</span> is the variable of interest at time <span class="math inline">\(t\)</span>, such as an asset price. The term <span class="math inline">\(\mu(X_t,t)\,dt\)</span> is called the <strong>drift</strong> term and represents the predictable part of the motion. The term <span class="math inline">\(\sigma(X_t,t)\,dW_t\)</span> is called the <strong>diffusion</strong> term and represents the random part.</p>
+<p>The process <span class="math inline">\(W_t\)</span> is a <strong>Brownian motion</strong> or <strong>Wiener process</strong>. Intuitively, Brownian motion is a mathematical model for continuous random noise. Over a very short time interval <span class="math inline">\(dt\)</span>, the increment <span class="math inline">\(dW_t\)</span> has mean zero and variance <span class="math inline">\(dt\)</span>. Thus,</p>
 <p><span class="math display">\[
-p(x) = p_z(g^{-1}(x)) \left|\det  \frac{\partial g^{-1}(x)}{\partial x} \right|
-:=  p_z(f(x)) \left|\det  \frac{\partial f(x)}{\partial x} \right|
-\]</span> We just defined <span class="math inline">\(f := g^{-1}\)</span>. <span class="math inline">\(g\)</span> is referred as <em>generative</em> path because we try to generate <span class="math inline">\(x\)</span> from a simple distribution <span class="math inline">\(p_z\)</span>, whereas <span class="math inline">\(f\)</span> is referred as <em>normalising</em> path because we try to degenerate <span class="math inline">\(x\)</span> back to <span class="math inline">\(z \sim p_z\)</span>, where <span class="math inline">\(p_z\)</span> is usually normal distribution.</p>
-<p><span class="math inline">\(f\)</span> is usually parameterized by neural network to maximise likelihood <span class="math inline">\(p(x)\)</span>. <span class="math inline">\(f\)</span> is usually chosen such that the determinant of the Jacobian is easy to calculate. Training and evaluation of density requires normalising path while sampling requires generative path as</p>
-<p><span class="math display">\[
-x \sim p(x)
-\mathrel{\Leftrightarrow}
-z \sim p_z(z), x = g(z)
+dW_t \sim \mathcal{N}(0,dt)
 \]</span></p>
-<p>People often care about <span class="math inline">\(f\)</span> because fast evaluation of <span class="math inline">\(f\)</span> is needed for fast training. If we need fast sampling, then <span class="math inline">\(g\)</span> is cared.</p>
-<p>In SBI, coupling flow and autoregressive flow is commonly used.</p>
-<section id="coupling-flow" class="level2">
-<h2 class="anchored" data-anchor-id="coupling-flow">Coupling flow</h2>
-<p><span class="math display">\[
-\begin{align}
-x &amp;= [x^A, x^B] \\
-\phi &amp;= NN(x^B) \\
-y^A &amp;= \mathbf{h}_\phi(x^A) = [h_{\phi_1}(x_1),...,h_{\phi_d}(x_d)]  \\
-y^B &amp;= x^B \\
-y &amp;= [y^A, y^B]
-\end{align}
-\]</span></p>
-<p>Firstly, <span class="math inline">\(x\)</span> is split into two dimension such that <span class="math inline">\(x^A \in \mathbb{R}^d, x^B \in \mathbb{R}^{D - d}\)</span>. Then one part is fed into NN: <span class="math inline">\(\mathbb{R}^{D - d} \rightarrow \mathbb{R}^k\)</span> to learn parameter <span class="math inline">\(\phi \in  \mathbb{R}^k\)</span>. The NN is referred as <em>conditioner</em>. This <span class="math inline">\(\phi\)</span> is then coupled with another part <span class="math inline">\(x^A\)</span> through invertible and differentiable function <span class="math inline">\(\mathbf{h}\)</span> called <em>transformer</em> or <em>coupling function</em>. <span class="math inline">\(k\)</span> depends on the choice of coupling function. Note that transformer is nothing to do with the ‘query-key-value’ transformers. Coupling function is usually applied element-wise. This transformed <span class="math inline">\(x^A\)</span> is then concatenated with <span class="math inline">\(x^B\)</span>, which gives output <span class="math inline">\(y\)</span>. Its inverse is given by</p>
-<p><span class="math display">\[
-\begin{align}
-x^B &amp;= y^B \\
-\phi &amp;= NN(x^B) \\
-x^A &amp; = \mathbf{h}_{\phi}^{-1}(y^A)
-\end{align}
-\]</span></p>
-<p>This ‘coupling’ is repeated multiple times, combined with non-stochastic permutation such that all the dimensions <span class="math inline">\(i = 1,...,D\)</span> are interacted to each other. The determinant of Jacobian is given by <span class="math inline">\(\prod_{i=1}^d \frac{\partial h_{\phi_i}(x_i)}{\partial x_i}\)</span>.</p>
-<p>In NPE, <span class="math inline">\(x \leftarrow \theta\)</span> and the conditioner is also conditioned on data as <span class="math inline">\(\phi = NN(\theta^B, \mathcal{D})\)</span>. In NLE, <span class="math inline">\(x \leftarrow \mathcal{D}\)</span> and <span class="math inline">\(\phi = NN(\mathcal{D}^B, \theta)\)</span></p>
+<p>in an informal sense.</p>
+<p>This means that the drift term controls the average direction of motion, while the diffusion term controls the magnitude of the uncertainty. So an SDE can be read as follows:</p>
+<blockquote class="blockquote">
+<p>the variable changes over a small time interval because of a systematic effect plus a random shock.</p>
+</blockquote>
 </section>
-<section id="autoregressive-flow" class="level2">
-<h2 class="anchored" data-anchor-id="autoregressive-flow">Autoregressive flow</h2>
+<section id="a-basic-financial-example" class="level3">
+<h3 class="anchored" data-anchor-id="a-basic-financial-example">2. A basic financial example</h3>
+<p>In finance, one of the most important SDEs is the model for stock prices:</p>
 <p><span class="math display">\[
-\begin{align}
-\text{For } i &amp;= 2,...,D:\\
-\phi_i &amp;= NN(x_{1:i-1}) \\
-y_i &amp;= h_{\phi_i}(x_i)\\
-\end{align}
+dS_t = \mu S_t\,dt + \sigma S_t\,dW_t.
 \]</span></p>
-<p>where <span class="math inline">\(\phi_1\)</span> is constant. This is very similar to coupling flow except that instead of splitting dimensions into half, dimension is split in autoregressive manners into <span class="math inline">\(x_i\)</span> and <span class="math inline">\(x_{1:i-1}\)</span> mutiple times. In practice, this coupling functions can be implemented without recursion using masking.</p>
-<p>In NPE, <span class="math inline">\(\phi_1 = NN(\mathcal{D}), \phi_i = NN(\theta_{1:i-1}, \mathcal{D}), 1 &lt; i \leq D\)</span>. In NLE, <span class="math inline">\(\phi_1 = NN(\theta),\phi_i = NN(\mathcal{D}_{1:i-1}, \theta), 1 &lt; i \leq D\)</span></p>
+<p>This says that the infinitesimal change in the stock price <span class="math inline">\(S_t\)</span> has two parts:</p>
+<ul>
+<li>a drift part, <span class="math inline">\(\mu S_t\,dt\)</span>, which represents the expected growth rate</li>
+<li>a diffusion part, <span class="math inline">\(\sigma S_t\,dW_t\)</span>, which represents random market fluctuations</li>
+</ul>
+<p>The factor <span class="math inline">\(S_t\)</span> appears in both terms, meaning that changes are proportional to the current stock price. This is natural in finance, since a <span class="math inline">\(1\%\)</span> move matters more for a stock priced at 100 than for one priced at 10.</p>
+<p>This model is called <strong>geometric Brownian motion</strong>. It is the foundation of the Black–Scholes option pricing model.</p>
 </section>
-<section id="coupling-function" class="level2">
-<h2 class="anchored" data-anchor-id="coupling-function">Coupling function</h2>
-<section id="affine" class="level3">
-<h3 class="anchored" data-anchor-id="affine">Affine</h3>
+<section id="why-geometric-brownian-motion-is-useful" class="level3">
+<h3 class="anchored" data-anchor-id="why-geometric-brownian-motion-is-useful">3. Why geometric Brownian motion is useful</h3>
+<p>The SDE</p>
 <p><span class="math display">\[
-h_{\phi_{i}}(x_i) = \alpha_i x_i + \beta_i, \quad \phi_i = (\alpha_i, \beta_i)
+dS_t = \mu S_t\,dt + \sigma S_t\,dW_t
 \]</span></p>
-<p>where <span class="math inline">\(\alpha_i &gt; 0, \beta_i \in \mathbb{R}\)</span>. For affine coupling function, <span class="math inline">\(k = d \times 2\)</span>.</p>
-</section>
-<section id="monotonic-rational-quadratic-spline" class="level3">
-<h3 class="anchored" data-anchor-id="monotonic-rational-quadratic-spline">Monotonic rational quadratic spline</h3>
-<p>In neural spline flow, monotonic rational quadratic spline (RQ-spline) is used for <span class="math inline">\(h\)</span>. It allows to model more expressive transformation from <span class="math inline">\(x\)</span> to <span class="math inline">\(y\)</span> and to <span class="math inline">\(z\)</span> at final. Monotonicity is necessary for bijectivity. In a nutshell, <span class="math inline">\(h\)</span> is defined in the interval <span class="math inline">\([-B, B]\)</span> and that interval is split into <span class="math inline">\(K\)</span> bins using <span class="math inline">\(K + 1\)</span> knots, where <span class="math inline">\(B\)</span> and <span class="math inline">\(K\)</span> are hyper-parameters. The height and the width of the bins are trainable parameters <span class="math inline">\((\phi_{h,j}, \phi_{w, j}), j = 1,...,K\)</span>, and derivatives at each knots are also trainable parameters <span class="math inline">\(\phi_{d,j}, j = 1,...,K-1\)</span>. These parameters defines the RQ-spline. In total, the coupling function have <span class="math inline">\(k = (3K - 1) \times d\)</span> parameters.</p>
-<p>In this figure, <span class="math inline">\(K = 10\)</span> is picked.</p>
-</section>
-</section>
-<section id="bibliography" class="level2">
-<h2 class="anchored" data-anchor-id="bibliography">Bibliography</h2>
-<p>[1] I. Kobyzev, S. J. D. Prince and M. A. Brubaker, “Normalizing Flows: An Introduction and Review of Current Methods,” in IEEE Transactions on Pattern Analysis and Machine Intelligence, vol.&nbsp;43, no. 11, pp.&nbsp;3964-3979.</p>
-<p>[2] Durkan, C., Bekasov, A., Murray, I., &amp; Papamakarios, G. (2019). Neural Spline Flows. Advances in Neural Information Processing Systems, abs/1906.04032. https://proceedings.neurips.cc/paper/2019/hash/7ac71d433f282034e088473244df8c02-Abstract.html</p>
-<p>[3] Radev, S. T., Mertens, U. K., Voss, A., Ardizzone, L., &amp; Kothe, U. (2022). BayesFlow: Learning Complex Stochastic Models With Invertible Neural Networks. IEEE Transactions on Neural Networks and Learning Systems, 33(4), 1452–1466.</p>
-</section>
-<section id="appendix" class="level2">
-<h2 class="anchored" data-anchor-id="appendix">Appendix</h2>
-<section id="dual-coupling" class="level3">
-<h3 class="anchored" data-anchor-id="dual-coupling">Dual coupling</h3>
-<p>Sometimes, one block of coupling is defined as two coupling as in [3] such that both split is transformed by coupling function in one unit of coupling.</p>
+<p>has several attractive features:</p>
+<ol type="1">
+<li>it allows continuous random movement</li>
+<li>it ensures that stock prices remain positive</li>
+<li>it models returns rather than absolute price changes</li>
+<li>it leads to tractable mathematical formulas</li>
+</ol>
+<p>Its explicit solution is</p>
 <p><span class="math display">\[
-\begin{align}
-x &amp;= [x^A, x^B] \\
-\phi_1 &amp;= NN_1(x^B) \\
-y^A &amp;= \mathbf{h}_{\phi_1}(x^A) \\
-\phi_2 &amp;=  NN_2(y^A)\\
-y^B &amp;= \mathbf{h}_{\phi_2}(x^B) \\
-y &amp;= [y^A, y^B]
-\end{align}
+S_t = S_0 \exp\left[\left(\mu-\frac{1}{2}\sigma^2\right)t + \sigma W_t\right].
 \]</span></p>
-<p>This is same as applying single coupling flow followed by permutation, which swap <span class="math inline">\(x^A\)</span> and <span class="math inline">\(x^B\)</span> and applying another coupling flow.</p>
+<p>This formula shows that <span class="math inline">\(\log S_t\)</span> is normally distributed, so <span class="math inline">\(S_t\)</span> itself is <strong>lognormally distributed</strong>.</p>
+<p>This is an important idea in Black–Scholes: prices are modeled as positive random variables whose logarithms are Gaussian.</p>
 </section>
-<section id="when-d-1" class="level3">
-<h3 class="anchored" data-anchor-id="when-d-1">When <span class="math inline">\(D = 1\)</span></h3>
-<p>In generative model <span class="math inline">\(x\)</span> is usually something high dimensional like image. But in SBI, <span class="math inline">\(D\)</span> could be 1. Coupling flow could be applied in such case. For example in NPE, if <span class="math inline">\(\theta \in \mathbb{R}\)</span> and consider only one coupling, then we have</p>
+<section id="the-intuition-behind-option-pricing" class="level3">
+<h3 class="anchored" data-anchor-id="the-intuition-behind-option-pricing">4. The intuition behind option pricing</h3>
+<p>An <strong>option</strong> is a financial contract whose value depends on an underlying asset. For example, a European call option gives its holder the right, but not the obligation, to buy a stock at a fixed price <span class="math inline">\(K\)</span> at maturity <span class="math inline">\(T\)</span>.</p>
+<p>Its payoff at maturity is</p>
 <p><span class="math display">\[
-\begin{align}
-\phi &amp;= NN(\mathcal{D}) \\
-z &amp;= \mathbf{h}_{\phi}(\theta)
-\end{align}
+(S_T-K)^+ = \max(S_T-K,0).
 \]</span></p>
-<p>In this case, <span class="math inline">\(\theta\)</span> is not going to be coupled with another split of <span class="math inline">\(\theta\)</span> because <span class="math inline">\(\theta\)</span> is just one-dimensional, but it is still coupled with <span class="math inline">\(\mathcal{D}\)</span>.</p>
-<p>In this case, naturally, coupling flow is same as autoregressive flow given same conditioner and coupling function.</p>
+<p>This means:</p>
+<ul>
+<li>if <span class="math inline">\(S_T &gt; K\)</span>, the option is worth <span class="math inline">\(S_T-K\)</span></li>
+<li>if <span class="math inline">\(S_T \le K\)</span>, the option expires worthless</li>
+</ul>
+<p>So the key problem is:</p>
+<blockquote class="blockquote">
+<p>what is the fair value today of a payoff that depends on a random future stock price?</p>
+</blockquote>
+<p>The Black–Scholes model answers this by combining the stock price SDE with a no-arbitrage argument.</p>
+</section>
+<section id="the-blackscholes-stock-price-model" class="level3">
+<h3 class="anchored" data-anchor-id="the-blackscholes-stock-price-model">5. The Black–Scholes stock price model</h3>
+<p>The Black–Scholes model assumes that the stock price follows geometric Brownian motion:</p>
+<p><span class="math display">\[
+dS_t = \mu S_t\,dt + \sigma S_t\,dW_t.
+\]</span></p>
+<p>Here:</p>
+<ul>
+<li><span class="math inline">\(\mu\)</span> is the expected return of the stock</li>
+<li><span class="math inline">\(\sigma\)</span> is the volatility</li>
+<li><span class="math inline">\(W_t\)</span> is Brownian motion</li>
+</ul>
+<p>At first glance, it might seem that the option price should depend on <span class="math inline">\(\mu\)</span>, since <span class="math inline">\(\mu\)</span> controls the stock’s expected growth. Surprisingly, in the Black–Scholes formula, the option price does <strong>not</strong> depend on <span class="math inline">\(\mu\)</span>.</p>
+<p>The reason is that under the no-arbitrage principle, one can construct a hedged portfolio that eliminates risk over an infinitesimal interval. Once the risk is removed, the portfolio must grow at the risk-free rate <span class="math inline">\(r\)</span>. This leads to a pricing rule under the <strong>risk-neutral measure</strong>, where the stock effectively evolves as</p>
+<p><span class="math display">\[
+dS_t = r S_t\,dt + \sigma S_t\,dW_t.
+\]</span></p>
+<p>So the expected return <span class="math inline">\(\mu\)</span> is replaced by the risk-free rate <span class="math inline">\(r\)</span> for pricing purposes.</p>
+</section>
+<section id="the-blackscholes-partial-differential-equation" class="level3">
+<h3 class="anchored" data-anchor-id="the-blackscholes-partial-differential-equation">6. The Black–Scholes partial differential equation</h3>
+<p>Let <span class="math inline">\(V(S,t)\)</span> denote the price of an option as a function of the stock price <span class="math inline">\(S\)</span> and time <span class="math inline">\(t\)</span>. By applying Itô’s lemma and constructing a riskless hedged portfolio, one obtains the Black–Scholes PDE:</p>
+<p><span class="math display">\[
+\frac{\partial V}{\partial t}
++\frac{1}{2}\sigma^2 S^2 \frac{\partial^2 V}{\partial S^2}
++rS\frac{\partial V}{\partial S}
+-rV=0.
+\]</span></p>
+<p>This equation says that the option price must evolve in a way consistent with no arbitrage.</p>
+<p>Each term has an interpretation:</p>
+<ul>
+<li><span class="math inline">\(\frac{\partial V}{\partial t}\)</span> captures the effect of time passing</li>
+<li><span class="math inline">\(\frac{1}{2}\sigma^2 S^2 \frac{\partial^2 V}{\partial S^2}\)</span> captures the effect of uncertainty and curvature</li>
+<li><span class="math inline">\(rS\frac{\partial V}{\partial S}\)</span> reflects the financing effect from holding the underlying asset</li>
+<li><span class="math inline">\(-rV\)</span> discounts the option value at the risk-free rate</li>
+</ul>
+<p>So the Black–Scholes PDE is a balance equation ensuring that the option price is consistent with continuous hedging and no arbitrage.</p>
+</section>
+<section id="the-blackscholes-formula-for-a-european-call-option" class="level3">
+<h3 class="anchored" data-anchor-id="the-blackscholes-formula-for-a-european-call-option">7. The Black–Scholes formula for a European call option</h3>
+<p>Solving the PDE with terminal payoff</p>
+<p><span class="math display">\[
+V(S,T) = (S_T-K)^+
+\]</span></p>
+<p>gives the Black–Scholes formula for a European call:</p>
+<p><span class="math display">\[
+C(S_0,0)=S_0 N(d_1)-Ke^{-rT}N(d_2),
+\]</span></p>
+<p>where</p>
+<p><span class="math display">\[
+d_1=\frac{\ln(S_0/K)+(r+\frac{1}{2}\sigma^2)T}{\sigma\sqrt{T}},
+\qquad
+d_2=d_1-\sigma\sqrt{T}.
+\]</span></p>
+<p>Here, <span class="math inline">\(N(\cdot)\)</span> is the standard normal cumulative distribution function.</p>
+<p>Similarly, the European put price is</p>
+<p><span class="math display">\[
+P(S_0,0)=Ke^{-rT}N(-d_2)-S_0N(-d_1).
+\]</span></p>
+</section>
+<section id="intuition-for-the-blackscholes-formula" class="level3">
+<h3 class="anchored" data-anchor-id="intuition-for-the-blackscholes-formula">8. Intuition for the Black–Scholes formula</h3>
+<p>The call price</p>
+<p><span class="math display">\[
+C=S_0N(d_1)-Ke^{-rT}N(d_2)
+\]</span></p>
+<p>can be understood intuitively as:</p>
+<ul>
+<li>the current stock price, adjusted for the probability of finishing in the money</li>
+<li>minus the present value of the strike price, also adjusted for that probability</li>
+</ul>
+<p>The term <span class="math inline">\(N(d_2)\)</span> is often interpreted as the risk-neutral probability that the option finishes in the money, while <span class="math inline">\(N(d_1)\)</span> is related to the hedge ratio, or <strong>delta</strong>, of the option.</p>
+<p>So the Black–Scholes formula is not just a mysterious closed form. It is the result of:</p>
+<ol type="1">
+<li>modeling the stock with an SDE</li>
+<li>eliminating risk by hedging</li>
+<li>using no-arbitrage pricing</li>
+<li>solving the resulting differential equation</li>
+</ol>
+</section>
+<section id="why-volatility-matters-so-much" class="level3">
+<h3 class="anchored" data-anchor-id="why-volatility-matters-so-much">9. Why volatility matters so much</h3>
+<p>In the Black–Scholes model, volatility <span class="math inline">\(\sigma\)</span> plays a central role. Higher volatility increases the uncertainty of the stock price at maturity. For a call option, this is valuable because the payoff is asymmetric:</p>
+<ul>
+<li>downside is limited to zero</li>
+<li>upside is unbounded</li>
+</ul>
+<p>Therefore, greater volatility generally increases the value of both calls and puts.</p>
+<p>This is one reason option prices are highly sensitive to volatility, and why implied volatility is such an important concept in practice.</p>
+</section>
+<section id="summary-intuition" class="level3">
+<h3 class="anchored" data-anchor-id="summary-intuition">10. Summary intuition</h3>
+<p>A stochastic differential equation models a system that evolves with both predictable and random components. In finance, the Black–Scholes model assumes that stock prices follow the SDE</p>
+<p><span class="math display">\[
+dS_t=\mu S_t\,dt+\sigma S_t\,dW_t.
+\]</span></p>
+<p>Under no-arbitrage pricing, the drift is replaced by the risk-free rate, leading to the Black–Scholes pricing equation and ultimately to the closed-form option pricing formula. Intuitively, the model says that stock prices move continuously but randomly, and the value of an option is the present value of its future payoff under this risk-adjusted probabilistic framework.</p>
+</section>
+</section>
+<section id="concise-formulas" class="level2">
+<h2 class="anchored" data-anchor-id="concise-formulas">Concise formulas</h2>
+<section id="geometric-brownian-motion" class="level3">
+<h3 class="anchored" data-anchor-id="geometric-brownian-motion">Geometric Brownian motion</h3>
+<p><span class="math display">\[
+dS_t=\mu S_t\,dt+\sigma S_t\,dW_t
+\]</span></p>
+</section>
+<section id="blackscholes-pde" class="level3">
+<h3 class="anchored" data-anchor-id="blackscholes-pde">Black–Scholes PDE</h3>
+<p><span class="math display">\[
+\frac{\partial V}{\partial t}
++\frac{1}{2}\sigma^2 S^2 \frac{\partial^2 V}{\partial S^2}
++rS\frac{\partial V}{\partial S}
+-rV=0
+\]</span></p>
+</section>
+<section id="european-call-price" class="level3">
+<h3 class="anchored" data-anchor-id="european-call-price">European call price</h3>
+<p><span class="math display">\[
+C=S_0N(d_1)-Ke^{-rT}N(d_2)
+\]</span></p>
+</section>
+<section id="european-put-price" class="level3">
+<h3 class="anchored" data-anchor-id="european-put-price">European put price</h3>
+<p><span class="math display">\[
+P=Ke^{-rT}N(-d_2)-S_0N(-d_1)
+\]</span></p>
+<p>with <span class="math display">\[
+d_1=\frac{\ln(S_0/K)+(r+\frac{1}{2}\sigma^2)T}{\sigma\sqrt{T}},
+\qquad
+d_2=d_1-\sigma\sqrt{T}.
+\]</span></p>
 
 
 </section>
@@ -387,7 +492,7 @@ z &amp;= \mathbf{h}_{\phi}(\theta)
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/mainkoon81\.github\.io\/minkun-website\/");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

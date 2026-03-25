@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Minkun Kim">
-<meta name="dcterms.date" content="2025-10-28">
+<meta name="dcterms.date" content="2026-01-17">
 
-<title>Data Pipelining with AWS – Minkun Kim</title>
+<title>Housing Price Data Pipelining with AWS – Minkun Kim</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -183,7 +183,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Data Pipelining with AWS</h1>
+<h1 class="title">Housing Price Data Pipelining with AWS</h1>
   <div class="quarto-categories">
     <div class="quarto-category">data storage</div>
   </div>
@@ -203,7 +203,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 28, 2025</p>
+      <p class="date">January 17, 2026</p>
     </div>
   </div>
   
@@ -235,7 +235,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 <p>In AWS, we first create an S3 bucket and a designated folder to store the raw data. The following Python script is used to retrieve data from the API and perform initial processing. By “processing the raw data,” it mainly mean extracting the required columns from the XML response and uploading the collected dataset to the S3 data lake.</p>
-<div id="24bae64c" class="cell" data-execution_count="1">
+<div id="ac74d084" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#######################################################################################</span></span>
@@ -694,7 +694,7 @@ Systems, 33(4), 1452–1466.
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/mainkoon81\.github\.io\/minkun-website\/");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

@@ -1,5 +1,5 @@
 ---
-title: "Data Pipelining with AWS"
+title: "Housing Price Data Pipelining with AWS"
 format:
   html:
     code-fold: show
@@ -10,7 +10,7 @@ execute:
 jupyter: python3
 category: "data storage"
 author: "Minkun Kim"
-date: "2025-10-28"
+date: "2026-01-17"
 categories:
   - data storage
 comments:

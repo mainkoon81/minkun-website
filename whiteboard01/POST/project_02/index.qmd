@@ -6,194 +6,221 @@ execute:
   warning: true
   message: true
 jupyter: python3
-category: "stochastic process"
+category: "Risk Modeling"
 author: "Minkun Kim"
-date: "10.28.2025"
+date: "8.10.2025"
 categories:
-  - Predictive Bayesian
+  - Risk Modeling
 comments:
   utterances:
     repo: "mainkoon81.github.io/minkun-website/"
 ---
 
-In generative model we are interested in estimating distribution of
-$x \in \mathbb{R}^D$ by integrating out latent variable
-$z \in \mathbb{R}^D$, that is
+
+## Dirichlet Process
+
+The **Dirichlet process (DP)** is a stochastic process whose realizations are themselves probability distributions. It is widely used in Bayesian nonparametrics when one does not want to fix in advance a finite-dimensional parametric family for the unknown distribution. Instead of assuming, for example, that the data arise from a normal distribution with unknown parameters, the Dirichlet process places a prior directly on the space of probability measures.
+
+A Dirichlet process is written as
 
 $$
-p(x) = \int p(x | z)p_z(z)dz
+G \sim \mathrm{DP}(\alpha, G_0),
 $$
 
-The integral is usually intractable. In normalizing flow, we pick
-$p_z(z)$ to be a simple distirbution such as standard normal
-distribution $N(0, I_D)$, and transform $p_z(z)$ with
-$g: \mathbb{R}^D \rightarrow \mathbb{R}^D$. We pick $g$ to be
-diffeomorphism, that is, $g$ is 1. bijective, 2. differentiable, 3. its
-inverse is differentiable. This allows us to express $p(x)$ using change
-of variable formula (without any intractable integral involved)
+where $G_0$ is called the **base distribution** and $\alpha > 0$ is called the **concentration parameter**.
+
+The meaning of this notation is the following: for any measurable partition $A_1,\dots,A_k$ of the sample space,
 
 $$
-p(x) = p_z(g^{-1}(x)) \left|\det  \frac{\partial g^{-1}(x)}{\partial x} \right|
-:=  p_z(f(x)) \left|\det  \frac{\partial f(x)}{\partial x} \right|
-$$ We just defined $f := g^{-1}$. $g$ is referred as *generative* path
-because we try to generate $x$ from a simple distribution $p_z$, whereas
-$f$ is referred as *normalising* path because we try to degenerate $x$
-back to $z \sim p_z$, where $p_z$ is usually normal distribution.
-
-$f$ is usually parameterized by neural network to maximise likelihood
-$p(x)$. $f$ is usually chosen such that the determinant of the Jacobian
-is easy to calculate. Training and evaluation of density requires
-normalising path while sampling requires generative path as
-
-$$
-x \sim p(x)
-\mathrel{\Leftrightarrow}
-z \sim p_z(z), x = g(z)
+\bigl(G(A_1),\dots,G(A_k)\bigr)
+\sim
+\mathrm{Dirichlet}\bigl(\alpha G_0(A_1),\dots,\alpha G_0(A_k)\bigr).
 $$
 
-People often care about $f$ because fast evaluation of $f$ is needed for
-fast training. If we need fast sampling, then $g$ is cared.
+This is the defining property of the Dirichlet process. It says that once the space is divided into finitely many disjoint regions, the random probabilities assigned by $G$ to those regions follow a Dirichlet distribution.
 
-In SBI, coupling flow and autoregressive flow is commonly used.
+### Intuition
 
-## Coupling flow
+The Dirichlet process may be viewed as a probability distribution over probability distributions. Before observing the data, we do not commit to a single fixed distribution. Instead, we allow the unknown distribution itself to be random.
 
-$$
-\begin{align}
-x &= [x^A, x^B] \\
-\phi &= NN(x^B) \\
-y^A &= \mathbf{h}_\phi(x^A) = [h_{\phi_1}(x_1),...,h_{\phi_d}(x_d)]  \\
-y^B &= x^B \\
-y &= [y^A, y^B]
-\end{align}
-$$
-
-Firstly, $x$ is split into two dimension such that
-$x^A \in \mathbb{R}^d, x^B \in \mathbb{R}^{D - d}$. Then one part is fed
-into NN: $\mathbb{R}^{D - d} \rightarrow \mathbb{R}^k$ to learn
-parameter $\phi \in  \mathbb{R}^k$. The NN is referred as
-*conditioner*. This $\phi$ is then coupled with another part $x^A$
-through invertible and differentiable function $\mathbf{h}$ called
-*transformer* or *coupling function*. $k$ depends on the choice of
-coupling function. Note that transformer is nothing to do with the
-'query-key-value' transformers. Coupling function is usually applied
-element-wise. This transformed $x^A$ is then concatenated with $x^B$,
-which gives output $y$. Its inverse is given by
+The base distribution $G_0$ plays the role of a prior center. In fact,
 
 $$
-\begin{align}
-x^B &= y^B \\
-\phi &= NN(x^B) \\
-x^A & = \mathbf{h}_{\phi}^{-1}(y^A)
-\end{align}
+\mathbb{E}[G(A)] = G_0(A)
 $$
 
-This 'coupling' is repeated multiple times, combined with non-stochastic
-permutation such that all the dimensions $i = 1,...,D$ are interacted to
-each other. The determinant of Jacobian is given by
-$\prod_{i=1}^d \frac{\partial h_{\phi_i}(x_i)}{\partial x_i}$.
+for every measurable set $A$.
 
-In NPE, $x \leftarrow \theta$ and the conditioner is also conditioned on
-data as $\phi = NN(\theta^B, \mathcal{D})$. In NLE,
-$x \leftarrow \mathcal{D}$ and $\phi = NN(\mathcal{D}^B, \theta)$
+Thus, $G_0$ represents the average shape of the random distribution $G$. However, $G$ will not usually be exactly equal to $G_0$; it fluctuates around it.
 
-## Autoregressive flow
+The concentration parameter $\alpha$ controls how strongly $G$ is concentrated around $G_0$:
 
-$$
-\begin{align}
-\text{For } i &= 2,...,D:\\
-\phi_i &= NN(x_{1:i-1}) \\
-y_i &= h_{\phi_i}(x_i)\\
-\end{align}
-$$
+- if $\alpha$ is large, then $G$ tends to stay close to $G_0$
+- if $\alpha$ is small, then $G$ can deviate more substantially from $G_0$
 
-where $\phi_1$ is constant. This is very similar to coupling flow except
-that instead of splitting dimensions into half, dimension is split in
-autoregressive manners into $x_i$ and $x_{1:i-1}$ mutiple times. In
-practice, this coupling functions can be implemented without recursion
-using masking.
+So $G_0$ determines the **location** of the prior belief, while $\alpha$ determines the **strength** of that belief.
 
-In NPE,
-$\phi_1 = NN(\mathcal{D}), \phi_i = NN(\theta_{1:i-1}, \mathcal{D}), 1 < i \leq D$.
-In NLE,
-$\phi_1 = NN(\theta),\phi_i = NN(\mathcal{D}_{1:i-1}, \theta), 1 < i \leq D$
+### Finite-dimensional view
 
-## Coupling function
-
-### Affine
+To understand the definition more concretely, suppose the sample space is partitioned into two sets, $A$ and $A^c$. Then
 
 $$
-h_{\phi_{i}}(x_i) = \alpha_i x_i + \beta_i, \quad \phi_i = (\alpha_i, \beta_i)
+\bigl(G(A), G(A^c)\bigr)
+\sim
+\mathrm{Dirichlet}\bigl(\alpha G_0(A), \alpha G_0(A^c)\bigr).
 $$
 
-where $\alpha_i > 0, \beta_i \in \mathbb{R}$. For affine coupling function, $k = d \times 2$.
-
-
-### Monotonic rational quadratic spline
-
-In neural spline flow, monotonic rational quadratic spline (RQ-spline) is used for $h$. It allows to model more expressive transformation from $x$ to $y$
-and to $z$ at final. Monotonicity is necessary for bijectivity. In a nutshell, 
-$h$ is defined in the interval $[-B, B]$ and that interval is split into $K$ bins using $K + 1$ knots, where $B$ and $K$ are hyper-parameters. The height and the width of the bins are trainable parameters $(\phi_{h,j}, \phi_{w, j}), j = 1,...,K$, and derivatives at each knots are also trainable parameters $\phi_{d,j}, j = 1,...,K-1$. These parameters defines the RQ-spline. In total, the coupling function have $k = (3K - 1) \times d$ parameters.
-
-
-In this figure, $K = 10$ is picked. 
-
-## Bibliography
-
-\[1\] I. Kobyzev, S. J. D. Prince and M. A. Brubaker, "Normalizing
-Flows: An Introduction and Review of Current Methods," in IEEE
-Transactions on Pattern Analysis and Machine Intelligence, vol. 43, no.
-11, pp. 3964-3979.
-
-\[2\] Durkan, C., Bekasov, A., Murray, I., & Papamakarios, G. (2019).
-Neural Spline Flows. Advances in Neural Information Processing Systems,
-abs/1906.04032.
-https://proceedings.neurips.cc/paper/2019/hash/7ac71d433f282034e088473244df8c02-Abstract.html
-
-\[3\] Radev, S. T., Mertens, U. K., Voss, A., Ardizzone, L., & Kothe, U.
-(2022). BayesFlow: Learning Complex Stochastic Models With Invertible
-Neural Networks. IEEE Transactions on Neural Networks and Learning
-Systems, 33(4), 1452–1466.
-
-## Appendix
-
-### Dual coupling
-
-Sometimes, one block of coupling is defined as two coupling as in \[3\]
-such that both split is transformed by coupling function in one unit of
-coupling.
+Since the two components must sum to one, this reduces to a Beta distribution:
 
 $$
-\begin{align}
-x &= [x^A, x^B] \\
-\phi_1 &= NN_1(x^B) \\
-y^A &= \mathbf{h}_{\phi_1}(x^A) \\
-\phi_2 &=  NN_2(y^A)\\
-y^B &= \mathbf{h}_{\phi_2}(x^B) \\
-y &= [y^A, y^B]
-\end{align}
-$$ 
+G(A) \sim \mathrm{Beta}\bigl(\alpha G_0(A), \alpha(1-G_0(A))\bigr).
+$$
 
-This is same as applying single coupling flow followed by
-permutation, which swap $x^A$ and $x^B$ and applying another coupling
-flow.
+Hence, for every measurable set $A$, the random mass $G(A)$ is centered around $G_0(A)$, with variability controlled by $\alpha$.
 
-### When $D = 1$
+### Posterior conjugacy
 
-In generative model $x$ is usually something high dimensional like
-image. But in SBI, $D$ could be 1. Coupling flow could be applied in
-such case. For example in
-NPE, if $\theta \in \mathbb{R}$ and consider only one coupling, then we
-have
+One of the most attractive properties of the Dirichlet process is its conjugacy. Suppose
 
 $$
-\begin{align}
-\phi &= NN(\mathcal{D}) \\
-z &= \mathbf{h}_{\phi}(\theta)
-\end{align}
-$$ 
+X_1,\dots,X_n \mid G \overset{\mathrm{iid}}{\sim} G,
+\qquad
+G \sim \mathrm{DP}(\alpha, G_0).
+$$
 
-In this case, $\theta$ is not going to be coupled with another split of $\theta$ because $\theta$ is just one-dimensional, but it is still coupled with $\mathcal{D}$.
+Then the posterior distribution of $G$ is also a Dirichlet process:
 
-In this case, naturally, coupling flow is same as autoregressive flow
-given same conditioner and coupling function.
+$$
+G \mid X_1,\dots,X_n
+\sim
+\mathrm{DP}\left(\alpha+n,\; \frac{\alpha G_0 + \sum_{i=1}^n \delta_{X_i}}{\alpha+n}\right),
+$$
+
+where $\delta_{X_i}$ denotes a point mass at $X_i$.
+
+This expression has a very natural interpretation. The posterior base distribution is a weighted average of:
+
+- the prior base distribution $G_0$
+- the empirical distribution of the observed data
+
+Thus, the Dirichlet process updates in a way that balances prior beliefs and observed evidence.
+
+### Why DP draws are discrete
+
+A striking property of the Dirichlet process is that draws from it are almost surely **discrete**, even when the base distribution $G_0$ is continuous. This is one of its most important theoretical features.
+
+A constructive representation due to Sethuraman is the **stick-breaking representation**:
+
+$$
+G = \sum_{j=1}^\infty \pi_j \delta_{\theta_j},
+$$
+
+where
+
+$$
+\theta_j \overset{\mathrm{iid}}{\sim} G_0,
+$$
+
+and the weights are given by
+
+$$
+\pi_j = V_j \prod_{\ell < j} (1-V_\ell),
+\qquad
+V_j \overset{\mathrm{iid}}{\sim} \mathrm{Beta}(1,\alpha).
+$$
+
+This shows that a random draw from a Dirichlet process is an infinite discrete distribution made up of atoms $\theta_j$ with random weights $\pi_j$ that sum to one.
+
+The term “stick-breaking” comes from the following intuition: start with a stick of length 1. Break off a random proportion $V_1$ to form $\pi_1$. Then break off a proportion $V_2$ of what remains to form $\pi_2$, and continue indefinitely.
+
+### Predictive interpretation: the Pólya urn view
+
+Another important way to understand the Dirichlet process is through its predictive distribution. If
+
+$$
+X_1,\dots,X_n \mid G \overset{\mathrm{iid}}{\sim} G,
+\qquad
+G \sim \mathrm{DP}(\alpha, G_0),
+$$
+
+then the predictive distribution for a new observation $X_{n+1}$ is
+
+$$
+X_{n+1} \mid X_1,\dots,X_n
+\sim
+\frac{\alpha}{\alpha+n}G_0
++
+\frac{1}{\alpha+n}\sum_{i=1}^n \delta_{X_i}.
+$$
+
+This formula is highly intuitive. The next draw is generated either:
+
+- from the base distribution $G_0$, with probability proportional to $\alpha$, or
+- by repeating one of the previously observed values, with probability proportional to how often it has already appeared
+
+This clustering property is fundamental. It explains why the Dirichlet process is so useful for mixture modeling: observations tend to share atoms, which induces random clusters.
+
+### Dirichlet process mixtures
+
+Since a draw from a Dirichlet process is discrete, a DP is not usually used directly as a prior for a smooth density. Instead, it is often used in a **Dirichlet process mixture model**.
+
+A typical DP mixture model has the form
+
+$$
+X_i \mid \theta_i \sim F(\theta_i),
+$$
+
+$$
+\theta_i \mid G \sim G,
+$$
+
+$$
+G \sim \mathrm{DP}(\alpha, G_0).
+$$
+
+Here, $F(\theta_i)$ is a parametric kernel, such as a normal distribution with parameter $\theta_i$. The latent parameters $\theta_i$ are drawn from the random distribution $G$, and because $G$ is discrete, several $\theta_i$ values may coincide. This induces a clustering structure among the observations.
+
+The resulting marginal density may be written informally as
+
+$$
+f(x) = \int F(x \mid \theta)\, dG(\theta),
+$$
+
+where $G$ itself is random. In this way, the DP mixture model produces a flexible distributional model that can adapt to skewness, multimodality, and other deviations from simple parametric families.
+
+### Interpretation of the hyperparameters
+
+The two hyperparameters of the Dirichlet process have distinct roles:
+
+#### Base distribution $G_0$
+The base distribution determines where the atoms are likely to be located. It is the centering distribution of the process and reflects prior beliefs about plausible parameter values or support points.
+
+#### Concentration parameter $\alpha$
+The concentration parameter controls how diffuse the random distribution is around $G_0$, and also affects the clustering behavior:
+
+- small $\alpha$ encourages fewer distinct clusters
+- large $\alpha$ encourages more distinct clusters
+
+Thus, $\alpha$ controls the tendency to create new clusters, while $G_0$ controls where those clusters are likely to appear.
+
+### Why the Dirichlet process is useful
+
+The Dirichlet process is useful because it provides a principled Bayesian prior on unknown distributions without requiring a fixed finite-dimensional parametric form. It combines flexibility with tractability:
+
+- it is mathematically well defined
+- it has conjugate updating
+- it admits constructive representations
+- it naturally induces clustering
+- it is the foundation of many Bayesian nonparametric mixture models
+
+For this reason, the Dirichlet process has become one of the central tools in Bayesian nonparametric statistics.
+
+### Summary
+
+A Dirichlet process is a random probability measure $G$ such that, for every finite measurable partition, the vector of probabilities assigned by $G$ follows a Dirichlet distribution. It is denoted by
+
+$$
+G \sim \mathrm{DP}(\alpha, G_0),
+$$
+
+where $G_0$ is the base distribution and $\alpha$ is the concentration parameter. The base distribution determines the prior center of the process, while the concentration parameter determines how strongly the random measure is concentrated around that center. Although draws from a Dirichlet process are almost surely discrete, the process is especially powerful when used in mixture models, where it provides a flexible and elegant prior for unknown distributions and latent cluster structures.

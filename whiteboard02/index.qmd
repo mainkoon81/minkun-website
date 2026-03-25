@@ -11,7 +11,7 @@ page-layout: full
 title-block-banner: true
 ---
 
-In energy finance, being a quant isn’t just about building models — it’s about making sure those models are fed with clean, timely, and scalable data. Our models are only as good as the data that drives them. Model accuracy depends on data quality, not just mathematical skill! We are dealing with massive amounts of real-time and historical data — electricity load curves, weather forecasts, fuel prices, grid constraints, power plant outages, carbon credit prices, etc. Without a well-designed ETL process or pipeline, this data is messy, delayed, or incomplete, making any model unreliable. That’s where data engineering skills come in.
+In energy finance, being a quant isn’t just about building models — it’s about making sure those models are fed with clean, timely, and scalable data. Our models are only as good as the data that drives them. Model accuracy depends on data quality, not just mathematical skill! We are dealing with massive amounts of real-time and historical data — electricity load curves, weather forecasts, fuel prices, grid constraints, power plant outages, carbon credit prices, etc. Without a well-designed ETL process or pipeline, this data is messy, delayed, or incomplete, making any model unreliable. That’s where data engineering skills shine.
 
 
 
