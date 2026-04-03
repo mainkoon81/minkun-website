@@ -22,7 +22,7 @@ comments:
 
 ### 1. Stochastic differential equations
 
-A **stochastic differential equation (SDE)** is a differential equation that includes a random component. Ordinary differential equations describe how a variable changes over time in a fully deterministic way, whereas stochastic differential equations allow the evolution to be partly unpredictable.
+** - under development - ** A **stochastic differential equation (SDE)** is a differential equation that includes a random component. Ordinary differential equations describe how a variable changes over time in a fully deterministic way, whereas stochastic differential equations allow the evolution to be partly unpredictable.
 
 A simple way to think about this is to imagine the price of a financial asset. Even if we believe that, on average, the price tends to grow over time, the actual path is never perfectly smooth. Instead, it moves up and down in a random way. An SDE is designed to capture both of these features at the same time: a systematic trend and random fluctuations.
 

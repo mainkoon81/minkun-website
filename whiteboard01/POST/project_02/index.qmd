@@ -19,7 +19,7 @@ comments:
 
 ## Dirichlet Process
 
-The **Dirichlet process (DP)** is a stochastic process whose realizations are themselves probability distributions. It is widely used in Bayesian nonparametrics when one does not want to fix in advance a finite-dimensional parametric family for the unknown distribution. Instead of assuming, for example, that the data arise from a normal distribution with unknown parameters, the Dirichlet process places a prior directly on the space of probability measures.
+** - under development - ** The Dirichlet process (DP) is a stochastic process whose realizations are themselves probability distributions. It is widely used in Bayesian nonparametrics when one does not want to fix in advance a finite-dimensional parametric family for the unknown distribution. Instead of assuming, for example, that the data arise from a normal distribution with unknown parameters, the Dirichlet process places a prior directly on the space of probability measures.
 
 A Dirichlet process is written as
 
